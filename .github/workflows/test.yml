@@ -4,6 +4,13 @@ name: Test
 
 jobs:
   test:
+    strategy:
+      matrix:
+        os: [ubuntu-latest]
+      fail-fast: false
+
+    runs-on: ${{ matrix.os }}
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
