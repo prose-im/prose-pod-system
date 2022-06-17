@@ -4,6 +4,8 @@
 
 **Prose Pod system configurations and build rules. Used to package everything together.**
 
+Copyright 2022, Prose Foundation.
+
 ## License
 
 Licensing information can be found in the [LICENSE.md](./LICENSE.md) document.
