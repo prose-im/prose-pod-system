@@ -4,7 +4,7 @@
 
 **Prose Pod system configurations and build rules. Used to package everything together.**
 
-Copyright 2022, Prose Foundation.
+Copyright 2022, Prose Foundation - Released under the [Mozilla Public License 2.0](./LICENSE.md).
 
 ## License
 
