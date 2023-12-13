@@ -1,5 +1,31 @@
-admins = {}
+-- Prose Pod Server
+-- XMPP Server Configuration
 
+-- Base server configuration
+pidfile = "/var/run/prosody/prosody.pid"
+
+authentication = "internal_hashed"
+storage = "internal"
+
+log = {
+  info = "*console";
+  warn = "*console";
+  error = "*console";
+}
+
+-- Network interfaces/ports
+interfaces = { "*" }
+
+c2s_ports = { 5222 }
+s2s_ports = { 5269 }
+
+http_ports = { 5280 }
+http_interfaces = { "*" }
+
+https_ports = {}
+https_interfaces = {}
+
+-- Enabled modules
 modules_enabled = {
   "roster";
   "saslauth";
@@ -26,24 +52,26 @@ modules_enabled = {
   "websocket";
 }
 
-allow_registration = false
-
-reload_modules = { "tls" }
-
+-- Path to SSL key and certificate for all server domains
 -- ssl = {
 --   key = "/etc/prosody/certs/prose.org.local.key";
 --   certificate = "/etc/prosody/certs/prose.org.local.crt";
 -- }
 
+-- Disable in-band registrations (done through the Prose Pod Dashboard/API)
+allow_registration = false
+
+-- Refresh TLS module on reload (SSL certificate post-renewal hook)
+reload_modules = { "tls" }
+
+-- Mandate highest security levels
 c2s_require_encryption = true
 s2s_require_encryption = true
 s2s_secure_auth = false
 
+-- Enforce safety C2S/S2S limits
 c2s_stanza_size_limit = 256 * 1024
 s2s_stanza_size_limit = 512 * 1024
-
-consider_websocket_secure = true
-cross_domain_websocket = true
 
 limits = {
   c2s = {
@@ -57,38 +85,24 @@ limits = {
   };
 }
 
+-- Allow reverse-proxying to WebSocket service over insecure local HTTP
+consider_websocket_secure = true
+cross_domain_websocket = true
+
+-- Specify server administrator
 contact_info = {
   admin = { "mailto:hostmaster@prose.org.local" };
 }
 
+-- MAM settings
 archive_expires_after = "never"
 default_archive_policy = true
 max_archive_query_results = 100
 
+-- Enable vCard legacy compatibility layer
 upgrade_legacy_vcards = true
 
-pidfile = "/var/run/prosody/prosody.pid"
-authentication = "internal_hashed"
-
-storage = "internal"
-
-log = {
-  info = "*console";
-  warn = "*console";
-  error = "*console";
-}
-
-interfaces = { "*" }
-
-c2s_ports = { 5222 }
-s2s_ports = { 5269 }
-
-http_ports = { 5280 }
-http_interfaces = { "*" }
-
-https_ports = {}
-https_interfaces = {}
-
+-- Server hosts and components
 VirtualHost "prose.org.local"
 
 Component "groups.prose.org.local" "muc"
