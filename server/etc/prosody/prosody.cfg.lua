@@ -28,6 +28,7 @@ https_interfaces = {}
 -- Enabled modules
 modules_enabled = {
   "roster";
+  "groups";
   "saslauth";
   "tls";
   "dialback";
@@ -101,6 +102,9 @@ max_archive_query_results = 100
 
 -- Enable vCard legacy compatibility layer
 upgrade_legacy_vcards = true
+
+-- Define server members groups file
+groups_file = "/etc/prosody/roster_groups.txt"
 
 -- Server hosts and components
 VirtualHost "prose.org.local"
