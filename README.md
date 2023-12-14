@@ -10,7 +10,8 @@ Copyright 2022, Prose Foundation - Released under the [Mozilla Public License 2.
 
 Some tools are available to ease working on Prose:
 
-* **Bootstrap local Prose server**: `./tools/bootstrap.sh [environment]` (where `environment` defaults to `local`)
+* **Bootstrap local Prose server**: `./tools/bootstrap.sh [environment]`
+  * `[environment]`: _defaults to `local`_
 
 ## License
 
