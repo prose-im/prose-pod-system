@@ -55,10 +55,10 @@ modules_enabled = {
 }
 
 -- Path to SSL key and certificate for all server domains
--- ssl = {
---   key = "/etc/prosody/certs/prose.org.local.key";
---   certificate = "/etc/prosody/certs/prose.org.local.crt";
--- }
+ssl = {
+  key = "/etc/prosody/certs/prose.org.local.key";
+  certificate = "/etc/prosody/certs/prose.org.local.crt";
+}
 
 -- Disable in-band registrations (done through the Prose Pod Dashboard/API)
 allow_registration = false
