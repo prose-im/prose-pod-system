@@ -51,6 +51,7 @@ modules_enabled = {
   "csi";
   "server_contact_info";
   "websocket";
+  "s2s_bidi";
 }
 
 -- Path to SSL key and certificate for all server domains
@@ -111,5 +112,12 @@ VirtualHost "prose.org.local"
 
 Component "groups.prose.org.local" "muc"
   name = "Chatrooms"
+
+  modules_enabled = {
+    "muc_mam"
+  }
+
   restrict_room_creation = "local"
-  modules_enabled = { "muc_mam" }
+
+  log_all_rooms = true
+  muc_log_expires_after = "never"
