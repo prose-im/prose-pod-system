@@ -1,4 +1,4 @@
-[All]
+[Team]
 valerian@prose.org.local
 marc@prose.org.local
 remi@prose.org.local
