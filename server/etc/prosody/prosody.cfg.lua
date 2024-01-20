@@ -52,7 +52,6 @@ modules_enabled = {
   "server_contact_info";
   "websocket";
   "s2s_bidi";
-  "reload_modules";
 }
 
 -- Path to SSL key and certificate for all server domains
@@ -63,9 +62,6 @@ ssl = {
 
 -- Disable in-band registrations (done through the Prose Pod Dashboard/API)
 allow_registration = false
-
--- Refresh TLS module on reload (SSL certificate post-renewal hook)
-reload_modules = { "tls" }
 
 -- Mandate highest security levels
 c2s_require_encryption = true
