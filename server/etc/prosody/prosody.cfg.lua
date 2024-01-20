@@ -52,6 +52,7 @@ modules_enabled = {
   "server_contact_info";
   "websocket";
   "s2s_bidi";
+  "reload_modules";
 }
 
 -- Path to SSL key and certificate for all server domains
