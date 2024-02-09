@@ -125,4 +125,4 @@ Component "upload.prose.org.local" "http_file_share"
         http_file_share_daily_quota = 100*1024*1024
         http_file_share_expires_after = -1
         http_host = "localhost"
-        http_external_url = "http://localhost:5280/file_share/"
+        http_external_url = "http://localhost:5280/"
