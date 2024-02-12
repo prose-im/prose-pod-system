@@ -122,7 +122,7 @@ Component "groups.prose.org.local" "muc"
 Component "upload.prose.org.local" "http_file_share"
         name = "HTTP File Upload"
         http_file_share_size_limit = 20*1024*1024
-        http_file_share_daily_quota = 100*1024*1024
+        http_file_share_daily_quota = 250*1024*1024
         http_file_share_expires_after = -1
         http_host = "localhost"
         http_external_url = "http://localhost:5280/"
