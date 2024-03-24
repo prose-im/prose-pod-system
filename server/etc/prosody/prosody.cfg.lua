@@ -110,19 +110,20 @@ VirtualHost "prose.org.local"
 Component "groups.prose.org.local" "muc"
   name = "Chatrooms"
 
-  modules_enabled = {
-    "muc_mam"
-  }
-
   restrict_room_creation = "local"
 
-  log_all_rooms = true
+  muc_log_all_rooms = true
+  muc_log_by_default = true
   muc_log_expires_after = "never"
+  max_archive_query_results = 100
+
+  modules_enabled = { "muc_mam" }
 
 Component "upload.prose.org.local" "http_file_share"
-        name = "HTTP File Upload"
-        http_file_share_size_limit = 20*1024*1024
-        http_file_share_daily_quota = 250*1024*1024
-        http_file_share_expires_after = -1
-        http_host = "localhost"
-        http_external_url = "http://localhost:5280/"
+  name = "HTTP File Upload"
+
+  http_file_share_size_limit = 20*1024*1024
+  http_file_share_daily_quota = 250*1024*1024
+  http_file_share_expires_after = -1
+  http_host = "localhost"
+  http_external_url = "http://localhost:5280/"
