@@ -86,7 +86,6 @@ limits = {
 
 -- Allow reverse-proxying to WebSocket service over insecure local HTTP
 consider_websocket_secure = true
-cross_domain_websocket = true
 
 -- Specify server administrator
 contact_info = {
