@@ -6,3 +6,6 @@
 
 # Server
 server/var/lib/*
+
+# Env
+.env

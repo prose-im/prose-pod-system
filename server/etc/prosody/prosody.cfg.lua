@@ -1,6 +1,8 @@
 -- Prose Pod Server
 -- XMPP Server Configuration
 
+admins = { "prose-pod-api@prose.org.local" }
+
 -- Base server configuration
 pidfile = "/var/run/prosody/prosody.pid"
 
@@ -52,6 +54,8 @@ modules_enabled = {
   "server_contact_info";
   "websocket";
   "s2s_bidi";
+  "admin_rest";
+  "init_admin";
 }
 
 -- Path to SSL key and certificate for all server domains
@@ -102,6 +106,12 @@ upgrade_legacy_vcards = true
 
 -- Define server members groups file
 groups_file = "/etc/prosody/roster_groups.txt"
+
+init_admin_jid = "prose-pod-api@prose.org.local"
+init_admin_password_env_var_name = "PROSE_API__ADMIN_PASSWORD"
+
+http_host = "prose-pod-server"
+http_external_url = "http://prose-pod-server:5280/"
 
 -- Server hosts and components
 VirtualHost "prose.org.local"

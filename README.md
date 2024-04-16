@@ -6,12 +6,26 @@
 
 Copyright 2022, Prose Foundation - Released under the [Mozilla Public License 2.0](./LICENSE.md).
 
+## Launching both the XMPP server and the Admin API
+
+To launch both the XMPP server (`prose-pod-server`) and the Admin API (`prose-pod-api`), you can use [Docker Compose](https://docs.docker.com/compose/).
+
+First, create a `.env` file at the repository root containing required secrets and localhost overrides:
+
+```bash
+export JWT_SIGNING_KEY='<INSERT_JWT_SIGNING_KEY>'
+export PROSE_API__ADMIN_PASSWORD='<INSERT_VERY_STRONG_PASSWORD>'
+export PROSE_SERVER__DOMAIN='prose.org.local'
+```
+
+Then, run `docker compose up` and everything should work.
+
 ## Tools
 
 Some tools are available to ease working on Prose:
 
-* **Bootstrap local Prose server**: `./tools/bootstrap.sh [environment]`
-  * `[environment]`: _defaults to `local`_
+- **Bootstrap local Prose server** (without the admin API): `./tools/bootstrap.sh [environment]`
+  - `[environment]`: _defaults to `local`_
 
 ## License
 

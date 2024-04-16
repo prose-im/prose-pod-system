@@ -1,0 +1,36 @@
+services:
+  api:
+    image: proseim/prose-pod-api
+    ports:
+      - "8000:8000"
+      - "8080:8080"
+    volumes:
+      - ./database.db:/database.db
+      - ./Prose.toml:/Prose.toml
+      - ./Rocket.toml:/Rocket.toml
+    networks:
+      prose-network:
+        aliases:
+          - prose-pod-api
+    env_file:
+      - ./.env
+
+  server:
+    image: proseim/prose-pod-server
+    ports:
+      - "5222:5222"
+      - "5269:5269"
+      - "5280:5280"
+      - "5582:5582"
+    volumes:
+      - ./server/etc/prosody/:/etc/prosody/
+      - ./server/var/lib/prosody/:/var/lib/prosody/
+    networks:
+      prose-network:
+        aliases:
+          - prose-pod-server
+    env_file:
+      - ./.env
+
+networks:
+  prose-network: {}
