@@ -8,6 +8,7 @@ services:
       - ./database.db:/database.db
       - ./Prose.toml:/Prose.toml
       - ./Rocket.toml:/Rocket.toml
+      - ./server/etc/prosody/prosody.cfg.lua:/etc/prosody/prosody.cfg.lua
     networks:
       prose-network:
         aliases:
