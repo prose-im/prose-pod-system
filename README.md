@@ -16,6 +16,7 @@ First, create a `.env` file at the repository root containing required secrets a
 export JWT_SIGNING_KEY='<INSERT_JWT_SIGNING_KEY>'
 export PROSE_API__ADMIN_PASSWORD='<INSERT_VERY_STRONG_PASSWORD>'
 export PROSE_SERVER__DOMAIN='prose.org.local'
+export RUST_LOG='info,sqlx=warn'
 ```
 
 Then, run `docker compose up` and everything should work.
