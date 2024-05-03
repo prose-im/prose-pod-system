@@ -4,5 +4,5 @@
 # macOS
 .DS_Store
 
-# Server
-server/var/lib/*
+# Env
+.env

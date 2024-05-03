@@ -1,0 +1,11 @@
+[default]
+address = "0.0.0.0"
+
+[release]
+# Max level to log. (off/normal/debug/critical)
+# Default for release is "critical"
+log_level = "normal"
+
+[default.databases.data]
+url = "sqlite://database.sqlite?mode=rwc"
+sqlx_logging = false
