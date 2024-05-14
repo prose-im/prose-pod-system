@@ -48,6 +48,11 @@ limits = {
 -- Allow reverse-proxying to WebSocket service over insecure local HTTP
 consider_websocket_secure = true
 
+-- Modules
+modules_enabled = {
+  "auto_activate_hosts";
+}
+
 -- Server hosts and components
 VirtualHost "admin.prose.org.local"
   admins = { "prose-pod-api@admin.prose.org.local" }
