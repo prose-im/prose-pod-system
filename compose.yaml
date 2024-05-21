@@ -14,7 +14,7 @@ services:
         aliases:
           - prose-pod-api
     env_file:
-      - ./.env
+      - "${ENV_FILE:-.env}"
 
   server:
     image: proseim/prose-pod-server
@@ -31,7 +31,7 @@ services:
         aliases:
           - prose-pod-server
     env_file:
-      - ./.env
+      - "${ENV_FILE:-.env}"
     entrypoint: >
       sh -c "cp etc/prosody/prosody.cfg.lua.initial etc/prosody/prosody.cfg.lua && prosody"
 
