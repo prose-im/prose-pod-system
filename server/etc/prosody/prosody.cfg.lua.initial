@@ -22,6 +22,11 @@ http_interfaces = { "*" }
 https_ports = {}
 https_interfaces = {}
 
+-- Modules
+modules_enabled = {
+  "auto_activate_hosts";
+}
+
 -- Disable in-band registrations (done through the Prose Pod Dashboard/API)
 allow_registration = false
 
