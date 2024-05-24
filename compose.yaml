@@ -6,7 +6,7 @@ services:
       - "8080:8080"
     volumes:
       - ./database.db:/database.db
-      - ./Prose.toml:/Prose.toml
+      - "${PROSE_CONFIG_FILE:-./Prose.toml}:/Prose.toml"
       - ./Rocket.toml:/Rocket.toml
       - ./server/etc/prosody/:/etc/prosody/
     networks:
