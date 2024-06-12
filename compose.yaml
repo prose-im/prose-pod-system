@@ -30,6 +30,7 @@ services:
       prose-network:
         aliases:
           - prose-pod-server
+          - prose-pod-server-admin
     env_file:
       - "${ENV_FILE:-.env}"
     entrypoint: >
