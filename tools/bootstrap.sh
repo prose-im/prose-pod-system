@@ -19,7 +19,7 @@ rc=0
 if [ -d "$ABSPATH/server/$environment" ]; then
   echo "[$environment] 🚀 Bootstrapping Prose server..."
 
-  # Bootstrap local Prose server
+  # Bootstrap Prose server (using target environment)
   docker run --rm \
     -p 5222:5222 \
     -p 5269:5269 \
