@@ -16,7 +16,7 @@ fi
 
 rc=0
 
-if [ "$environment" = "local" ]; then
+if [ -d "$ABSPATH/server/$environment" ]; then
   echo "[$environment] 🚀 Bootstrapping Prose server..."
 
   # Bootstrap local Prose server
@@ -24,8 +24,8 @@ if [ "$environment" = "local" ]; then
     -p 5222:5222 \
     -p 5269:5269 \
     -p 5280:5280 \
-    -v "$ABSPATH/server/etc/prosody/:/etc/prosody/" \
-    -v "$ABSPATH/server/var/lib/prosody/:/var/lib/prosody/" \
+    -v "$ABSPATH/server/$environment/etc/prosody/:/etc/prosody/" \
+    -v "$ABSPATH/server/$environment/var/lib/prosody/:/var/lib/prosody/" \
     proseim/prose-pod-server
   rc=$?
 
