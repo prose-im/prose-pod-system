@@ -13,6 +13,8 @@ services:
       prose-network:
         aliases:
           - prose-pod-api
+    environment:
+      - RUST_LOG_STYLE=always
     env_file:
       - "${ENV_FILE:-.env}"
 
