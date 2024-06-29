@@ -64,8 +64,7 @@ VirtualHost "admin.prose.org.local"
   }
 
   -- HTTP settings
-  http_host = "prose-pod-server"
-  http_external_url = "http://prose-pod-server:5280"
+  http_host = "prose-pod-server-admin"
 
   -- mod_init_admin
   init_admin_jid = "prose-pod-api@admin.prose.org.local"
