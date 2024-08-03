@@ -1,6 +1,6 @@
 services:
   api:
-    image: proseim/prose-pod-api
+    image: proseim/prose-pod-api:latest
     ports:
       - "8000:8000"
       - "8080:8080"
@@ -19,7 +19,7 @@ services:
       - "${ENV_FILE:-.env}"
 
   server:
-    image: proseim/prose-pod-server
+    image: proseim/prose-pod-server:latest
     ports:
       - "5222:5222"
       - "5269:5269"
