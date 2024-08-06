@@ -5,10 +5,10 @@ services:
       - "8000:8000"
       - "8080:8080"
     volumes:
-      - ./database.db:/database.db
-      - "${PROSE_CONFIG_FILE:-./Prose.toml}:/Prose.toml"
-      - ./Rocket.toml:/Rocket.toml
-      - ./server/pod/etc/prosody/:/etc/prosody/
+      - "${DATABASE_PATH-./database.sqlite}:/database.sqlite"
+      - "${PROSE_CONFIG_FILE-./Prose.toml}:/Prose.toml"
+      - "${ROCKET_CONFIG_FILE-./Rocket.toml}:/Rocket.toml"
+      - "${SERVER_ROOT:-}/etc/prosody/:/etc/prosody/"
     networks:
       prose-network:
         aliases:
@@ -16,7 +16,7 @@ services:
     environment:
       - RUST_LOG_STYLE=always
     env_file:
-      - "${ENV_FILE:-.env}"
+      - "${ENV_FILE-.env}"
 
   server:
     image: proseim/prose-pod-server:latest
@@ -26,17 +26,17 @@ services:
       - "5280:5280"
       - "5582:5582"
     volumes:
-      - ./server/pod/etc/prosody/:/etc/prosody/
-      - ./server/pod/var/lib/prosody/:/var/lib/prosody/
+      - "${SERVER_ROOT:-}/etc/prosody/:/etc/prosody/"
+      - "${SERVER_ROOT:-}/var/lib/prosody/:/var/lib/prosody/"
     networks:
       prose-network:
         aliases:
           - prose-pod-server
           - prose-pod-server-admin
     env_file:
-      - "${ENV_FILE:-.env}"
+      - "${ENV_FILE-.env}"
     entrypoint: >
-      sh -c "cp etc/prosody/prosody.cfg.lua.initial etc/prosody/prosody.cfg.lua && prosody"
+      sh -c "cp /etc/prosody/prosody.cfg.lua.initial /etc/prosody/prosody.cfg.lua && prosody"
 
 networks:
   prose-network: {}
