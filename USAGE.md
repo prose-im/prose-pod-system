@@ -6,16 +6,6 @@ This repository is meant to be used in various ways. This guide explains how to 
 
 To launch both the XMPP server (`prose-pod-server`) and the Admin API (`prose-pod-api`), you can use [Docker Compose](https://docs.docker.com/compose/).
 
-### Creating the
-
-First, create a `.env` file at the repository root containing required secrets and localhost overrides:
-
-```bash
-export JWT_SIGNING_KEY='<INSERT_JWT_SIGNING_KEY>'
-export PROSE_BOOTSTRAP__PROSE_POD_API_XMPP_PASSWORD='<INSERT_VERY_STRONG_PASSWORD>'
-export RUST_LOG='debug,sqlx=warn,hyper=warn,hyper_util=warn'
-```
-
 ### Use case: Running a Prose Pod locally (with persisting data) {#running-pod-persistent}
 
 1. ### Configure the Prose Pod {#running-pod-persistent-configure}
@@ -85,6 +75,9 @@ docker compose up
 > Since integration tests are located in the [`prose-pod-api`] repository, helper scripts are located under [`prose-pod-api/scripts/`].
 
 ## Starting only a Prose Pod Server {#starting-a-prose-pod-server}
+
+- **Bootstrap local Prose server** (without the admin API): `./tools/bootstrap ENVIRONMENT`
+  - `ENVIRONMENT`: `local` or `pod` (directories under [`server/`](./server)). Defaults to `local`.
 
 [`prose-pod-api/scripts/`]: https://github.com/prose-im/prose-pod-api/tree/master/scripts "prose-pod-api/scripts at master · prose-im/prose-pod-api"
 [`prose-pod-api/scripts/integration-test`]: https://github.com/prose-im/prose-pod-api/blob/78cdb14827999f590a5fcff37ef2bd838b30a1b4/scripts/integration-test "prose-pod-api/scripts/integration-test at 78cdb14827999f590a5fcff37ef2bd838b30a1b4 · prose-im/prose-pod-api"
