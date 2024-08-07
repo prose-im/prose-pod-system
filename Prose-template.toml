@@ -1,0 +1,21 @@
+# Prose Pod API
+# REST API for administrating a Prose Pod
+# Configuration file
+# Example: https://github.com/prose-im/prose-pod-api/blob/master/Prose-example.toml
+# All keys: https://github.com/prose-im/prose-pod-api/blob/master/service/src/config/mod.rs
+
+[branding]
+page_url = "https://admin.prose.<INSERT_YOUR_DOMAIN>/"
+company_name = "<INSERT_YOUR_COMPANY_NAME>"
+
+[notify]
+
+[notify.email]
+from = "prose@<INSERT_YOUR_SMTP_DOMAIN>"
+to = "prose@<INSERT_YOUR_SMTP_DOMAIN>"
+
+smtp_host = "localhost"
+smtp_port = 587
+smtp_username = "<INSERT_SMTP_USERNAME>"
+smtp_password = "<INSERT_SMTP_PASSWORD>"
+smtp_encrypt = false
