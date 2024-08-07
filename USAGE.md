@@ -28,8 +28,7 @@ To launch both the XMPP server (`prose-pod-server`) and the Admin API (`prose-po
    touch database.sqlite
    ```
 
-   > [!TIP]
-   > You can change the database location by setting `DATABASE_PATH` before running `docker compose up`.
+   Tip: You can change the database location by setting `DATABASE_PATH` before running `docker compose up`.
 
 3. ### Copy the filesystem
 
@@ -47,12 +46,11 @@ To launch both the XMPP server (`prose-pod-server`) and the Admin API (`prose-po
    SERVER_ROOT=./pod-fs-root docker compose up
    ```
 
-   > [!TIP]
-   > If you just want to check that the Prose Pod starts correctly, you can run:
-   >
-   > ```bash
-   > PROSE_CONFIG_FILE="$(pwd)/Prose-example.toml" docker compose up
-   > ```
+   Tip: If you just want to check that the Prose Pod starts correctly, you can run:
+
+   ```bash
+   PROSE_CONFIG_FILE="$(pwd)/Prose-example.toml" docker compose up
+   ```
 
 ### Use case: Running an ephemeral Prose Pod locally (e.g. for quick integration tests)
 
@@ -63,8 +61,7 @@ SERVER_ROOT=PATH_TO_SERVER_FS_ROOT \
 docker compose up
 ```
 
-> [!TIP]
-> See [`prose-pod-api/scripts/integration-test`] for a real-life example.
+See [`prose-pod-api/scripts/integration-test`] for a real-life example.
 
 ### Use case: Running an ephemeral Prose Pod on a Raspberry Pi (e.g. for complete integration tests)
 
