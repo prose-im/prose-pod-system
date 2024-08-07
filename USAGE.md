@@ -43,7 +43,7 @@ export RUST_LOG='debug,sqlx=warn,hyper=warn,hyper_util=warn'
 
 3. ### Copy the filesystem {#running-pod-persistent-copy-fs}
 
-   While you *could* start the Prose Pod mounting its filesystem on `./server/pod`, you should copy it to avoid loosing data when running `tools/cleanup.sh`. You can easily do so by running:
+   While you *could* start the Prose Pod mounting its filesystem on `./server/pod`, you should copy it to avoid loosing data when running `tools/cleanup`. You can easily do so by running:
 
    ```bash
    cp -R ./server/pod ./pod-fs-root
@@ -74,7 +74,7 @@ docker compose up
 ```
 
 > [!TIP]
-> See [`prose-pod-api/scripts/integration-test.sh`] for a real-life example.
+> See [`prose-pod-api/scripts/integration-test`] for a real-life example.
 
 ### Use case: Running an ephemeral Prose Pod on a Raspberry Pi (e.g. for complete integration tests) {#running-pod-ephemeral-rpi}
 
@@ -87,6 +87,6 @@ docker compose up
 ## Starting only a Prose Pod Server {#starting-a-prose-pod-server}
 
 [`prose-pod-api/scripts/`]: https://github.com/prose-im/prose-pod-api/tree/master/scripts "prose-pod-api/scripts at master · prose-im/prose-pod-api"
-[`prose-pod-api/scripts/integration-test.sh`]: https://github.com/prose-im/prose-pod-api/blob/835aff62591682842d5740f0f651830f6055fdf8/scripts/integration-test.sh "prose-pod-api/scripts/integration-test.sh at 835aff62591682842d5740f0f651830f6055fdf8 · prose-im/prose-pod-api"
+[`prose-pod-api/scripts/integration-test`]: https://github.com/prose-im/prose-pod-api/blob/78cdb14827999f590a5fcff37ef2bd838b30a1b4/scripts/integration-test "prose-pod-api/scripts/integration-test at 78cdb14827999f590a5fcff37ef2bd838b30a1b4 · prose-im/prose-pod-api"
 [`prose-pod-api`]: https://github.com/prose-im/prose-pod-api "prose-im/prose-pod-api: Prose Pod API server. REST API used for administration and management."
 [SQLite]: https://www.sqlite.org/index.html "SQLite homepage"

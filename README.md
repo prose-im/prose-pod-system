@@ -24,7 +24,7 @@ Then, run `docker compose up` and everything should work.
 
 Some tools are available to ease working on Prose:
 
-- **Bootstrap local Prose server** (without the admin API): `./tools/bootstrap.sh [environment]`
+- **Bootstrap local Prose server** (without the admin API): `./tools/bootstrap [environment]`
   - `[environment]`: _defaults to `local`_
 
 ## License
