@@ -68,15 +68,24 @@ See [`prose-pod-api/scripts/integration-test`] for a real-life example.
 > [!WARNING]
 > This section is pretty advanced and requires a complex setup. It's not intended for everyone, just for the few maintainers who'd like to run the full integration test suite at home.
 
-> [!IMPORTANT]
-> Since integration tests are located in the [`prose-pod-api`] repository, helper scripts are located under [`prose-pod-api/scripts/`].
+Since integration tests are located in the [`prose-pod-api`] repository, helper scripts are located under [`prose-pod-api/scripts/prose-pod-on-rpi/`].
+
+```bash
+cd PATH_TO_PROSE_POD_API
+# Initialize the Prose Pod.
+./scripts/prose-pod-on-rpi/init --help
+# Cleanup the Prose Pod between test runs.
+./scripts/prose-pod-on-rpi/cleanup --help
+# Deinitialize (delete) the Prose Pod.
+./scripts/prose-pod-on-rpi/deinit --help
+```
 
 ## Starting only a Prose Pod Server
 
 - **Bootstrap local Prose server** (without the admin API): `./tools/bootstrap ENVIRONMENT`
   - `ENVIRONMENT`: `local` or `pod` (directories under [`server/`](./server)). Defaults to `local`.
 
-[`prose-pod-api/scripts/`]: https://github.com/prose-im/prose-pod-api/tree/master/scripts "prose-pod-api/scripts at master · prose-im/prose-pod-api"
+[`prose-pod-api/scripts/prose-pod-on-rpi/`]: https://github.com/prose-im/prose-pod-api/tree/master/scripts/prose-pod-on-rpi "prose-pod-api/scripts/prose-pod-on-rpi at master · prose-im/prose-pod-api"
 [`prose-pod-api/scripts/integration-test`]: https://github.com/prose-im/prose-pod-api/blob/78cdb14827999f590a5fcff37ef2bd838b30a1b4/scripts/integration-test "prose-pod-api/scripts/integration-test at 78cdb14827999f590a5fcff37ef2bd838b30a1b4 · prose-im/prose-pod-api"
 [`prose-pod-api`]: https://github.com/prose-im/prose-pod-api "prose-im/prose-pod-api: Prose Pod API server. REST API used for administration and management."
 [SQLite]: https://www.sqlite.org/index.html "SQLite homepage"
