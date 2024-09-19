@@ -27,6 +27,9 @@ modules_enabled = {
   "auto_activate_hosts";
 }
 
+-- Path to external plugins
+plugin_paths = { "/usr/local/lib/prosody/modules" }
+
 -- Disable in-band registrations (done through the Prose Pod Dashboard/API)
 allow_registration = false
 

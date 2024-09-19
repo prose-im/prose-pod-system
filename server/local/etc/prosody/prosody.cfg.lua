@@ -58,6 +58,9 @@ ssl = {
   key = "/etc/prosody/certs/prose.org.local.key";
 }
 
+-- Path to external plugins
+plugin_paths = { "/usr/local/lib/prosody/modules" }
+
 -- Disable in-band registrations (done through the Prose Pod Dashboard/API)
 allow_registration = false
 
@@ -126,7 +129,7 @@ Component "groups.prose.org.local" "muc"
   -- Modules
   modules_enabled = {
     "muc_mam";
-    "muc_public_affiliation";
+    "muc_public_affiliations";
   }
 
   -- MAM settings
