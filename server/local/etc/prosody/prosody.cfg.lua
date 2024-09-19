@@ -124,7 +124,10 @@ Component "groups.prose.org.local" "muc"
   name = "Chatrooms"
 
   -- Modules
-  modules_enabled = { "muc_mam" }
+  modules_enabled = {
+    "muc_mam";
+    "muc_public_affiliation";
+  }
 
   -- MAM settings
   max_archive_query_results = 100
