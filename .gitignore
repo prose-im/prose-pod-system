@@ -1,8 +1,15 @@
-# Editor
-.nova
-
 # macOS
 .DS_Store
 
 # Env
-.env
+*.env
+
+# Configuration files (not templates or examples)
+Prose.toml
+
+# Content files
+pod-fs-root/
+*.sqlite
+
+# Editors
+.nova
