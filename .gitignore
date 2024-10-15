@@ -2,7 +2,7 @@
 .DS_Store
 
 # Env
-.env
+*.env
 
 # Configuration files (not templates or examples)
 Prose.toml
