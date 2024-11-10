@@ -6,11 +6,11 @@
 
 Copyright 2022, Prose Foundation - Released under the [Mozilla Public License 2.0](./LICENSE.md).
 
-## :information_source: Usage
+## Usage
 
 See [USAGE.md](./USAGE.md).
 
-## :balance_scale: License
+## License
 
 Licensing information can be found in the [LICENSE.md](./LICENSE.md) document.
 
