@@ -4,7 +4,7 @@ This repository is meant to be used in various ways. This guide explains how to 
 
 ## Starting a Prose Pod
 
-> [!NOTE]
+> [!TIP]
 > This is the recommended way to start a Prose Pod.
 
 To launch both the XMPP server (`prose-pod-server`) and the Admin API (`prose-pod-api`), you can use [Docker Compose](https://docs.docker.com/compose/).
