@@ -55,6 +55,8 @@ To launch both the XMPP server (`prose-pod-server`) and the Admin API (`prose-po
    PROSE_CONFIG_FILE="$(pwd)/Prose-example.toml" docker compose up
    ```
 
+---
+
 ### Use case: Running an ephemeral Prose Pod locally (e.g. for quick integration tests)
 
 ```bash
@@ -65,6 +67,8 @@ docker compose up
 ```
 
 See [`prose-pod-api/scripts/integration-test`] for a real-life example.
+
+---
 
 ### Use case: Running an ephemeral Prose Pod on a Raspberry Pi (e.g. for complete integration tests)
 
