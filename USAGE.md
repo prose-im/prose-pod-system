@@ -87,7 +87,7 @@ cd PATH_TO_PROSE_POD_API
 ./scripts/prose-pod-on-rpi/deinit --help
 ```
 
-## Starting only a Prose Pod Server
+## Only start a Prose Pod Server
 
 > [!NOTE]
 > Most likely, you are looking to start a whole Prose Pod, not only the Prose Pod Server sub-system. Please refer to the [above section](#starting-a-prose-pod) on how to start a whole Prose Pod instead.
