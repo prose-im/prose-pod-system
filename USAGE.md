@@ -85,8 +85,15 @@ cd PATH_TO_PROSE_POD_API
 > [!NOTE]
 > Most likely, you are looking to start a whole Prose Pod, not only the Prose Pod Server sub-system. Please refer to the [above section](#starting-a-prose-pod) on how to start a whole Prose Pod instead.
 
-- **Bootstrap local Prose server** (without the admin API): `./tools/bootstrap ENVIRONMENT`
-  - `ENVIRONMENT`: `local` or `pod` (directories under [`server/`](./server)). Defaults to `local`.
+How to bootstrap local Prose server (without the admin API):
+
+```bash
+./tools/bootstrap ENVIRONMENT
+```
+
+The following options can be provided:
+
+- `ENVIRONMENT`: `local` or `pod` (directories under [`server/`](./server)). Defaults to `local`.
 
 [`prose-pod-api/scripts/prose-pod-on-rpi/`]: https://github.com/prose-im/prose-pod-api/tree/master/scripts/prose-pod-on-rpi "prose-pod-api/scripts/prose-pod-on-rpi at master · prose-im/prose-pod-api"
 [`prose-pod-api/scripts/integration-test`]: https://github.com/prose-im/prose-pod-api/blob/78cdb14827999f590a5fcff37ef2bd838b30a1b4/scripts/integration-test "prose-pod-api/scripts/integration-test at 78cdb14827999f590a5fcff37ef2bd838b30a1b4 · prose-im/prose-pod-api"
