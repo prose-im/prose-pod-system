@@ -24,5 +24,4 @@ smtp_encrypt = false
 automatically_accept_invitations = true
 
 [debug_only.dependency_modes]
-uuid = "incrementing"
 notifier = "logging"
