@@ -1,16 +1,16 @@
 # Usage guidelines
 
-This repository is meant to be used in various ways. This guide explains how to start a Prose Pod or Prose Pod Server depending on your use case.
+This repository is meant to be used in various ways. This guide explains how to start a Prose Pod or Prose Pod Server depending on your use case.
 
-## Starting a Prose Pod
+## Starting a Prose Pod
 
 To launch both the XMPP server (`prose-pod-server`) and the Admin API (`prose-pod-api`), you can use [Docker Compose](https://docs.docker.com/compose/).
 
-### Use case: Running a Prose Pod locally (with persisting data)
+### Use case: Running a Prose Pod locally (with persisting data)
 
-1. ### Configure the Prose Pod
+1. ### Configure the Prose Pod
 
-   Some static configuration is required to bootstrap and run a Prose Pod. Here is how you can copy the templates:
+   Some static configuration is required to bootstrap and run a Prose Pod. Here is how you can copy the templates:
 
    ```bash
    cd PROSE_POD_SYSTEM_DIR # Replace with your path to `prose-pod-system`
@@ -22,7 +22,7 @@ To launch both the XMPP server (`prose-pod-server`) and the Admin API (`prose-po
 
 2. ### Create the API database
 
-   The Prose Pod API uses a [SQLite] database so you need to create one:
+   The Prose Pod API uses a [SQLite] database so you need to create one:
 
    ```bash
    touch database.sqlite
@@ -32,27 +32,27 @@ To launch both the XMPP server (`prose-pod-server`) and the Admin API (`prose-po
 
 3. ### Copy the filesystem
 
-   While you *could* start the Prose Pod mounting its filesystem on `./server/pod`, you should copy it to avoid loosing data when running `tools/cleanup`. You can easily do so by running:
+   While you *could* start the Prose Pod mounting its filesystem on `./server/pod`, you should copy it to avoid loosing data when running `tools/cleanup`. You can easily do so by running:
 
    ```bash
    cp -R ./server/pod ./pod-fs-root
    ```
 
-4. ### Run the Prose Pod
+4. ### Run the Prose Pod
 
-   Finally, run the Prose Pod using:
+   Finally, run the Prose Pod using:
 
    ```bash
    SERVER_ROOT=./pod-fs-root docker compose up
    ```
 
-   Tip: If you just want to check that the Prose Pod starts correctly, you can run:
+   Tip: If you just want to check that the Prose Pod starts correctly, you can run:
 
    ```bash
    PROSE_CONFIG_FILE="$(pwd)/Prose-example.toml" docker compose up
    ```
 
-### Use case: Running an ephemeral Prose Pod locally (e.g. for quick integration tests)
+### Use case: Running an ephemeral Prose Pod locally (e.g. for quick integration tests)
 
 ```bash
 ENV_FILE=PATH_TO_ENV_FILE \
@@ -63,7 +63,7 @@ docker compose up
 
 See [`prose-pod-api/scripts/integration-test`] for a real-life example.
 
-### Use case: Running an ephemeral Prose Pod on a Raspberry Pi (e.g. for complete integration tests)
+### Use case: Running an ephemeral Prose Pod on a Raspberry Pi (e.g. for complete integration tests)
 
 > [!WARNING]
 > This section is pretty advanced and requires a complex setup. It's not intended for everyone, just for the few maintainers who'd like to run the full integration test suite at home.
@@ -72,15 +72,15 @@ Since integration tests are located in the [`prose-pod-api`] repository, helper 
 
 ```bash
 cd PATH_TO_PROSE_POD_API
-# Initialize the Prose Pod.
+# Initialize the Prose Pod.
 ./scripts/prose-pod-on-rpi/init --help
-# Cleanup the Prose Pod between test runs.
+# Cleanup the Prose Pod between test runs.
 ./scripts/prose-pod-on-rpi/cleanup --help
-# Deinitialize (delete) the Prose Pod.
+# Deinitialize (delete) the Prose Pod.
 ./scripts/prose-pod-on-rpi/deinit --help
 ```
 
-## Starting only a Prose Pod Server
+## Starting only a Prose Pod Server
 
 - **Bootstrap local Prose server** (without the admin API): `./tools/bootstrap ENVIRONMENT`
   - `ENVIRONMENT`: `local` or `pod` (directories under [`server/`](./server)). Defaults to `local`.
