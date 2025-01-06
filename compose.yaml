@@ -2,12 +2,10 @@ services:
   api:
     image: "${PROSE_POD_API_IMAGE:-proseim/prose-pod-api:${PROSE_POD_API_IMAGE_TAG:-${DEFAULT_DOCKER_TAG:-latest}}}"
     ports:
-      - "8000:8000"
       - "8080:8080"
     volumes:
       - "${DATABASE_PATH-./database.sqlite}:/database.sqlite"
       - "${PROSE_CONFIG_FILE-./Prose.toml}:/Prose.toml"
-      - "${ROCKET_CONFIG_FILE-./Rocket.toml}:/Rocket.toml"
       - "${SERVER_ROOT:-}/etc/prosody/:/etc/prosody/"
     networks:
       prose-network:
