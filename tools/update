@@ -1,0 +1,82 @@
+#!/bin/bash
+
+COMPOSE_FILE=compose.yaml
+
+set -e
+
+: ${SELF:="$(basename $0)"}
+
+Color_Off='\033[0m'
+Green='\033[0;32m'
+Yellow='\033[0;33m'
+BRed='\033[1;31m'
+
+die() {
+	echo -e "${BRed:?}${@:?"Must pass a message"}${Color_Off:?}" >&2
+	exit 1
+}
+usage() {
+	echo "Usage: ${SELF:?} [api=X.Y.Z] [server=X.Y.Z]"
+}
+help() {
+	usage
+	exit 0
+}
+
+[[ $# == 0 ]] && die $(usage)
+
+# A simplified `sed` command that works on both macOS and Linux.
+replace() {
+	local in_place
+	[[ "$1" == "-i" ]] && { in_place=1; shift 1; }
+
+	if [[ "$(uname)" == "Darwin" ]]; then
+		(( $in_place )) && sed -i '' -E "$@" || sed -E "$@"
+	else
+		sed ${in_place:+-i} -E "$@"
+	fi
+}
+replace_version() {
+	local regex="${1:?}" replace="${2:?}" file="${3:?}"
+	local pattern='s/'"${regex}"'/\1'"${replace}"'\3/'
+
+	replace -i "$pattern" "$file"
+}
+find_version() {
+	local regex="${1:?}"
+	replace -n 's/.*'"${regex}"'.*/\2/p' "${COMPOSE_FILE:?}"
+}
+
+for arg in "$@"; do
+	case $arg in
+		api=*) NEW_API_TAG="${arg#'api='}" ;;
+		server=*) NEW_SERVER_TAG="${arg#'server='}" ;;
+		--help) help ;;
+		*) die "Unknown argument: $arg.\n$(usage)" ;;
+	esac
+done
+
+# `:` blocks the greedy `+` from eating the `:-` prefix and `}` the suffix.
+# Otherwise, allow pretty much any name, there's no reason to enforce a pattern here.
+DOCKER_TAG_REGEX='[^:}]+'
+
+if [[ -n "${NEW_API_TAG}" ]]; then
+	API_REGEX='(PROSE_POD_API_IMAGE_TAG.+:-)('"${DOCKER_TAG_REGEX:?}"')(\}+")'
+	OLD_API_TAG="$(find_version "${API_REGEX:?}")"
+	echo -e "API: ${Yellow:?}${OLD_API_TAG:?}${Color_Off:?} -> ${Green:?}${NEW_API_TAG:?}${Color_Off:?}"
+fi
+if [[ -n "${NEW_SERVER_TAG}" ]]; then
+	SERVER_REGEX='(PROSE_POD_SERVER_IMAGE_TAG.+:-)('"${DOCKER_TAG_REGEX:?}"')(\}+")'
+	OLD_SERVER_TAG="$(find_version "${SERVER_REGEX:?}")"
+	echo -e "Server: ${Yellow:?}${OLD_SERVER_TAG:?}${Color_Off:?} -> ${Green:?}${NEW_SERVER_TAG:?}${Color_Off:?}"
+fi
+
+read -p "Proceed? [y/N]: " ok
+[[ "$ok" =~ ^[Yy]$ ]] || exit 1
+
+if [[ -n "${NEW_API_TAG}" ]]; then
+	replace_version "${API_REGEX:?}" "${NEW_API_TAG:?}" "${COMPOSE_FILE:?}"
+fi
+if [[ -n "${NEW_SERVER_TAG}" ]]; then
+	replace_version "${SERVER_REGEX:?}" "${NEW_SERVER_TAG:?}" "${COMPOSE_FILE:?}"
+fi
