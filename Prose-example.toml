@@ -16,8 +16,7 @@ url = "sqlite://database.sqlite?mode=rwc"
 [notify]
 
 [notify.email]
-from = "pod@prose.org"
-to = "pod@prose.org"
+pod_address = "pod@prose.org"
 
 smtp_host = "localhost"
 smtp_port = 587
