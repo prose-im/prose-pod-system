@@ -1,6 +1,6 @@
 services:
   api:
-    image: "${PROSE_POD_API_IMAGE:-proseim/prose-pod-api:${PROSE_POD_API_IMAGE_TAG:-${DEFAULT_DOCKER_TAG:-latest}}}"
+    image: "${PROSE_POD_API_IMAGE:-proseim/prose-pod-api:${PROSE_POD_API_IMAGE_TAG:-${DEFAULT_DOCKER_TAG:-0.4.1}}}"
     ports:
       - "8080:8080"
     volumes:
@@ -17,7 +17,7 @@ services:
       - "${ENV_FILE-.env}"
 
   server:
-    image: "${PROSE_POD_SERVER_IMAGE:-proseim/prose-pod-server:${PROSE_POD_SERVER_IMAGE_TAG:-${DEFAULT_DOCKER_TAG:-latest}}}"
+    image: "${PROSE_POD_SERVER_IMAGE:-proseim/prose-pod-server:${PROSE_POD_SERVER_IMAGE_TAG:-${DEFAULT_DOCKER_TAG:-0.3.4}}}"
     ports:
       - "5222:5222"
       - "5269:5269"
