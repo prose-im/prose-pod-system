@@ -11,8 +11,6 @@ company_name = "<INSERT_YOUR_COMPANY_NAME>"
 [databases.main]
 url = "sqlite://database.sqlite?mode=rwc"
 
-[notify]
-
 [notify.email]
 pod_address = "prose@<INSERT_YOUR_SMTP_DOMAIN>"
 
