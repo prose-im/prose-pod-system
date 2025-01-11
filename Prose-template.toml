@@ -8,9 +8,6 @@
 page_url = "https://admin.prose.<INSERT_YOUR_DOMAIN>/"
 company_name = "<INSERT_YOUR_COMPANY_NAME>"
 
-[databases.main]
-url = "sqlite://database.sqlite?mode=rwc"
-
 [notify.email]
 pod_address = "prose@<INSERT_YOUR_SMTP_DOMAIN>"
 
