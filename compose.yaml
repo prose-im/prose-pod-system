@@ -1,6 +1,6 @@
 services:
   api:
-    image: "${PROSE_POD_API_IMAGE:-proseim/prose-pod-api:${PROSE_POD_API_IMAGE_TAG:-${DEFAULT_DOCKER_TAG:-0.5.0}}}"
+    image: "${PROSE_POD_API_IMAGE:-proseim/prose-pod-api:${PROSE_POD_API_IMAGE_TAG:-${DEFAULT_DOCKER_TAG:-0.6.0}}}"
     ports:
       - "8080:8080"
     volumes:

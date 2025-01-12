@@ -4,29 +4,18 @@
 # Example: https://github.com/prose-im/prose-pod-api/blob/master/Prose-example.toml
 # All keys: https://github.com/prose-im/prose-pod-api/blob/master/service/src/config/mod.rs
 
-address = "0.0.0.0"
-
 [branding]
 page_url = "https://admin.prose.org/"
 company_name = "Prose"
 
-[databases.main]
-url = "sqlite://database.sqlite?mode=rwc"
-
-[notify]
-
 [notify.email]
-from = "pod@prose.org"
-to = "pod@prose.org"
+pod_address = "pod@prose.org"
 
 smtp_host = "localhost"
 smtp_port = 587
 smtp_username = "user-access"
 smtp_password = "user-password"
 smtp_encrypt = false
-
-[debug_only]
-automatically_accept_invitations = true
 
 [debug_only.dependency_modes]
 notifier = "logging"
