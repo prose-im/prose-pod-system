@@ -25,6 +25,7 @@ https_interfaces = {}
 -- Modules
 modules_enabled = {
   "auto_activate_hosts";
+  "register";
   "roster";
   "groups";
   "saslauth";
