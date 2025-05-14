@@ -34,7 +34,7 @@ services:
     env_file:
       - "${ENV_FILE-.env}"
     entrypoint: >
-      sh -c "cp /etc/prosody/prosody.cfg.lua.initial /etc/prosody/prosody.cfg.lua && prosody"
+      sh -c "cp /etc/prosody/prosody.bootstrap.cfg.lua /etc/prosody/prosody.cfg.lua && prosody"
 
 networks:
   prose-network: {}
