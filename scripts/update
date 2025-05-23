@@ -1,5 +1,11 @@
 #!/bin/bash
 
+##
+#  This file is part of prose-pod-system
+#
+#  Copyright 2025, Prose Foundation
+##
+
 COMPOSE_FILE=compose.yaml
 
 set -e

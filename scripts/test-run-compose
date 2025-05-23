@@ -1,5 +1,11 @@
 #!/usr/bin/env bash
 
+##
+#  This file is part of prose-pod-system
+#
+#  Copyright 2025, Prose Foundation
+##
+
 set -eu -o pipefail
 
 TEST_NAME="run-$(date +%s)"
