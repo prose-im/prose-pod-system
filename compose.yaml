@@ -1,40 +1,57 @@
-services:
-  api:
-    image: "${PROSE_POD_API_IMAGE:-proseim/prose-pod-api:${PROSE_POD_API_IMAGE_TAG:-${DEFAULT_DOCKER_TAG:-0.6.0}}}"
-    ports:
-      - "8080:8080"
-    volumes:
-      - "${DATABASE_PATH-./database.sqlite}:/database.sqlite"
-      - "${PROSE_CONFIG_FILE-./Prose.toml}:/Prose.toml"
-      - "${SERVER_ROOT:-}/etc/prosody/:/etc/prosody/"
-    networks:
-      prose-network:
-        aliases:
-          - prose-pod-api
-    environment:
-      - RUST_LOG_STYLE=always
-    env_file:
-      - "${ENV_FILE-.env}"
+name: prose
 
-  server:
-    image: "${PROSE_POD_SERVER_IMAGE:-proseim/prose-pod-server:${PROSE_POD_SERVER_IMAGE_TAG:-${DEFAULT_DOCKER_TAG:-0.3.4}}}"
-    ports:
-      - "5222:5222"
-      - "5269:5269"
-      - "5280:5280"
-      - "5582:5582"
+services:
+  # # https://github.com/prose-im/prose-pod-dashboard
+  # dashboard:
+  #   image: proseim/prose-pod-dashboard:${PROSE_POD_DASHBOARD_VERSION:-0.1.0}
+  #   depends_on: [api]
+  #   ports:
+  #     - "${PROSE_POD_DASHBOARD_PORT:-3030}:3030"
+  #   networks: [prose-network]
+  #   tty: "${PROSE_POD_DASHBOARD_IS_TTY:-${PROSE_POD_IS_TTY:-false}}"
+
+  # https://github.com/prose-im/prose-pod-api
+  api:
+    image: proseim/prose-pod-api:${PROSE_POD_API_VERSION:-0.14.1}
+    depends_on: [server]
+    # ports:
+    # # NOTE: Not necessary if you also run a Dashboard, as it will have access
+    # #   to the internal port through the Docker Network, and re-expose it at
+    # #   `/api`.
+    # # - "${PROSE_POD_API_PORT:-8080}:8080"
     volumes:
-      - "${SERVER_ROOT:-}/etc/prosody/:/etc/prosody/"
-      - "${SERVER_ROOT:-}/var/lib/prosody/:/var/lib/prosody/"
+      - "${PROSE_POD_API_DATA_DIR:?}:/var/lib/prose-pod-api/"
+      # NOTE: `/etc/prose-pod-api` cannot be read-only because we need to
+      #   override it when doing a factory reset (and only then).
+      - "${PROSE_POD_API_CONFIG_DIR:?}:/etc/prose-pod-api/"
+      - "${PROSODY_CONFIG_DIR:?}:/etc/prosody/"
+    networks: [prose-network]
+    env_file: "${PROSE_POD_API_ENV_FILE:-${PROSE_ENV_FILE:-/etc/prose/env}}"
+    tty: "${PROSE_POD_API_IS_TTY:-${PROSE_POD_IS_TTY:-false}}"
+
+  # https://github.com/prose-im/prose-pod-server
+  server:
+    image: proseim/prose-pod-server:${PROSE_POD_SERVER_VERSION:-0.3.19}
+    volumes:
+      - "${PROSODY_CONFIG_DIR:?}:/etc/prosody/"
+      - "${PROSODY_DATA_DIR:?}:/var/lib/prosody/"
+    # NOTE: See [Port and network configuration – Prosody IM](https://prosody.im/doc/ports).
+    ports:
+      # [Client connections](https://prosody.im/doc/modules/mod_c2s).
+      - "${PROSE_POD_SERVER_PORT_C2S:-5222}:5222"
+      # [Server-to-server connections](https://prosody.im/doc/modules/mod_s2s).
+      - "${PROSE_POD_SERVER_PORT_S2S:-5269}:5269"
+      # [HTTPS](https://prosody.im/doc/http).
+      - "${PROSE_POD_SERVER_PORT_HTTPS:-5281}:5281"
     networks:
       prose-network:
         aliases:
           - prose-pod-server
           - prose-pod-server-admin
-    env_file:
-      - "${ENV_FILE-.env}"
+    env_file: "${PROSODY_ENV_FILE:-${PROSE_ENV_FILE:-/etc/prose/env}}"
     entrypoint: >
-      sh -c "cp /etc/prosody/prosody.bootstrap.cfg.lua /etc/prosody/prosody.cfg.lua && prosody"
+      sh -c "cp /usr/share/prose/prosody.bootstrap.cfg.lua /etc/prosody/prosody.cfg.lua && prosody"
+    tty: "${PROSE_POD_SERVER_IS_TTY:-${PROSE_POD_IS_TTY:-false}}"
 
 networks:
   prose-network: {}
