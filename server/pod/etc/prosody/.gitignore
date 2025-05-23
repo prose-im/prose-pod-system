@@ -1,1 +1,4 @@
-prosody.cfg.lua
+*
+!.gitignore
+!certs/
+!certs/.gitkeep
