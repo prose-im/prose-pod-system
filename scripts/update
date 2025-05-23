@@ -67,12 +67,12 @@ done
 DOCKER_TAG_REGEX='[^:}]+'
 
 if [[ -n "${NEW_API_TAG}" ]]; then
-	API_REGEX='(PROSE_POD_API_IMAGE_TAG.+:-)('"${DOCKER_TAG_REGEX:?}"')(\}+")'
+	API_REGEX='(PROSE_POD_API_VERSION.+:-)('"${DOCKER_TAG_REGEX:?}"')(\}+")'
 	OLD_API_TAG="$(find_version "${API_REGEX:?}")"
 	echo -e "API: ${Yellow:?}${OLD_API_TAG:?}${Color_Off:?} -> ${Green:?}${NEW_API_TAG:?}${Color_Off:?}"
 fi
 if [[ -n "${NEW_SERVER_TAG}" ]]; then
-	SERVER_REGEX='(PROSE_POD_SERVER_IMAGE_TAG.+:-)('"${DOCKER_TAG_REGEX:?}"')(\}+")'
+	SERVER_REGEX='(PROSE_POD_SERVER_VERSION.+:-)('"${DOCKER_TAG_REGEX:?}"')(\}+")'
 	OLD_SERVER_TAG="$(find_version "${SERVER_REGEX:?}")"
 	echo -e "Server: ${Yellow:?}${OLD_SERVER_TAG:?}${Color_Off:?} -> ${Green:?}${NEW_SERVER_TAG:?}${Color_Off:?}"
 fi
