@@ -9,3 +9,6 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+
+      - name: Test Compose file
+        run: ./scripts/test-run-compose

@@ -13,3 +13,6 @@ pod-fs-root/
 
 # Editors
 .nova
+
+# Test artifacts
+test/**

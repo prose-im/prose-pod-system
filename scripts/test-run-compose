@@ -1,0 +1,50 @@
+#!/usr/bin/env bash
+
+set -eu -o pipefail
+
+TEST_NAME="run-$(date +%s)"
+TEST_DIR="./test/${TEST_NAME}"
+
+export PROSE_POD_API_DATA_DIR="${TEST_DIR}"/var/lib/prose-pod-api
+export PROSE_POD_API_CONFIG_DIR="${TEST_DIR}"/etc/prose-pod-api
+export PROSODY_DATA_DIR="${TEST_DIR}"/var/lib/prosody
+export PROSODY_CONFIG_DIR="${TEST_DIR}"/etc/prosody
+export PROSE_CONFIG_DIR="${TEST_DIR}"/etc/prose
+export PROSE_ENV_FILE="${PROSE_CONFIG_DIR}/env"
+
+mkdir -p "${TEST_DIR}"/var/lib/{prosody,prose-pod-api}
+mkdir -p "${TEST_DIR}"/etc/{prosody,prose-pod-api,prose}
+mkdir -p "${TEST_DIR}"/etc/prosody/certs
+
+touch "${PROSE_POD_API_DATA_DIR}/database.sqlite"
+
+touch "${PROSE_CONFIG_DIR}/env"
+chmod 640 "${PROSE_CONFIG_DIR}/env"
+
+try-run() {
+	docker compose up -d
+	sleep 1
+	docker compose stop
+
+	# echo "All logs:"
+	# docker compose logs
+
+	echo -e "\nWarnings:"
+	docker compose logs | grep -i 'warn'
+
+	echo -e "\nErrors:"
+	! docker compose logs | grep -i 'error' || exit 1
+}
+
+try-run
+
+# Test a bit of configuration.
+export PROSE_POD_IS_TTY=true
+cat <<EOF >> "${PROSE_CONFIG_DIR}/env"
+PROSE_LOG__FORMAT=full
+PROSE_LOG__WITH_ANSI=true
+EOF
+
+try-run
+
+rm -rf "${TEST_DIR}/"
