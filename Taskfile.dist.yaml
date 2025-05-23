@@ -9,4 +9,4 @@ env:
 tasks:
   update:
     desc: Update which versions of Prose Pod Server and Prose Pod API to use.
-    cmd: ./tools/update {{ .CLI_ARGS }}
+    cmd: ./scripts/update {{ .CLI_ARGS }}

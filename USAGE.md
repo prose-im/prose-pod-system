@@ -35,7 +35,7 @@ To launch both the XMPP server (`prose-pod-server`) and the Admin API (`prose-po
 
 3. ### Copy the filesystem
 
-   While you *could* start the Prose Pod mounting its filesystem on `./server/pod`, you should copy it to avoid loosing data when running `tools/cleanup`. You can easily do so by running:
+   While you *could* start the Prose Pod mounting its filesystem on `./server/pod`, you should copy it to avoid loosing data when running `scripts/cleanup`. You can easily do so by running:
 
    ```bash
    cp -R ./server/pod ./pod-fs-root
@@ -95,7 +95,7 @@ cd PATH_TO_PROSE_POD_API
 How to bootstrap local Prose server (without the admin API):
 
 ```bash
-./tools/bootstrap ENVIRONMENT
+./scripts/bootstrap ENVIRONMENT
 ```
 
 The following options can be provided:
