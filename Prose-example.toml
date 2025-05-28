@@ -15,6 +15,3 @@ smtp_port = 587
 smtp_username = "user-access"
 smtp_password = "user-password"
 smtp_encrypt = false
-
-[debug_only.dependency_modes]
-notifier = "logging"
