@@ -20,11 +20,11 @@ services:
     # #   `/api`.
     # # - "${PROSE_POD_API_PORT:-8080}:8080"
     volumes:
-      - "${PROSE_POD_API_DATA_DIR:?}:/var/lib/prose-pod-api/"
+      - "${PROSE_POD_API_DATA_DIR:-/var/lib/prose-pod-api/}:/var/lib/prose-pod-api/"
       # NOTE: `/etc/prose-pod-api` cannot be read-only because we need to
       #   override it when doing a factory reset (and only then).
-      - "${PROSE_POD_API_CONFIG_DIR:?}:/etc/prose-pod-api/"
-      - "${PROSODY_CONFIG_DIR:?}:/etc/prosody/"
+      - "${PROSE_POD_API_CONFIG_DIR:-/etc/prose-pod-api/}:/etc/prose-pod-api/"
+      - "${PROSODY_CONFIG_DIR:-/etc/prosody/}:/etc/prosody/"
     networks: [prose-network]
     env_file: "${PROSE_POD_API_ENV_FILE:-${PROSE_ENV_FILE:-/etc/prose/env}}"
     tty: "${PROSE_POD_API_IS_TTY:-${PROSE_POD_IS_TTY:-false}}"
@@ -33,8 +33,8 @@ services:
   server:
     image: proseim/prose-pod-server:${PROSE_POD_SERVER_VERSION:-0.3.19}
     volumes:
-      - "${PROSODY_CONFIG_DIR:?}:/etc/prosody/"
-      - "${PROSODY_DATA_DIR:?}:/var/lib/prosody/"
+      - "${PROSODY_CONFIG_DIR:-/etc/prosody/}:/etc/prosody/"
+      - "${PROSODY_DATA_DIR:-/var/lib/prosody/}:/var/lib/prosody/"
     # NOTE: See [Port and network configuration – Prosody IM](https://prosody.im/doc/ports).
     ports:
       # [Client connections](https://prosody.im/doc/modules/mod_c2s).
