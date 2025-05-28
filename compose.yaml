@@ -14,11 +14,11 @@ services:
   api:
     image: proseim/prose-pod-api:${PROSE_POD_API_VERSION:-0.14.1}
     depends_on: [server]
-    # ports:
-    # # NOTE: Not necessary if you also run a Dashboard, as it will have access
-    # #   to the internal port through the Docker Network, and re-expose it at
-    # #   `/api`.
-    # # - "${PROSE_POD_API_PORT:-8080}:8080"
+    ports:
+      # NOTE: Not necessary if you also run a Dashboard, as it will have access
+      #   to the internal port through the Docker Network, and re-expose it at
+      #   `/api`.
+      - "${PROSE_POD_API_PORT:-8080}:8080"
     volumes:
       - "${PROSE_POD_API_DATA_DIR:-/var/lib/prose-pod-api/}:/var/lib/prose-pod-api/"
       # NOTE: `/etc/prose-pod-api` cannot be read-only because we need to
