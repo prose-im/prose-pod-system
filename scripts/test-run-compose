@@ -18,14 +18,15 @@ export PROSODY_CONFIG_DIR="${TEST_DIR}"/etc/prosody
 export PROSE_CONFIG_DIR="${TEST_DIR}"/etc/prose
 export PROSE_ENV_FILE="${PROSE_CONFIG_DIR}/env"
 
+umask 027
 mkdir -p "${TEST_DIR}"/var/lib/{prosody,prose-pod-api}
 mkdir -p "${TEST_DIR}"/etc/{prosody,prose-pod-api,prose}
 mkdir -p "${TEST_DIR}"/etc/prosody/certs
 
 touch "${PROSE_POD_API_DATA_DIR}/database.sqlite"
 
+umask 077
 touch "${PROSE_CONFIG_DIR}/env"
-chmod 640 "${PROSE_CONFIG_DIR}/env"
 
 try-run() {
 	docker compose up -d
@@ -46,6 +47,7 @@ try-run
 
 # Test a bit of configuration.
 export PROSE_POD_IS_TTY=true
+umask 077
 cat <<EOF >> "${PROSE_CONFIG_DIR}/env"
 PROSE_LOG__FORMAT=full
 PROSE_LOG__WITH_ANSI=true
