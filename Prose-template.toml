@@ -5,7 +5,6 @@
 # All keys: https://github.com/prose-im/prose-pod-api/blob/master/service/src/config/mod.rs
 
 [branding]
-page_url = "https://admin.prose.<INSERT_YOUR_DOMAIN>/"
 company_name = "<INSERT_YOUR_COMPANY_NAME>"
 
 [notify.email]
