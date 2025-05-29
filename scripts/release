@@ -102,7 +102,7 @@ NEW_VERSION=$(echo "${VERSION_COMPONENTS[*]}" | tr ' ' '.')
 echo -e "Pod version: ${Yellow:?}${VERSION:?}${Color_Off:?} -> ${Green:?}${NEW_VERSION:?}${Color_Off:?}"
 echo "New commits:"
 git --no-pager log --reverse --no-merges \
-  --format="- %C(auto)%h %s %C(green)(%ad)" --date=short --color \
+  --format="- %C(auto)%h %s %C(green)(%ad)%C(reset)" --date=short --color \
   "${VERSION:?}"..HEAD
 
 # Update version number in files.
