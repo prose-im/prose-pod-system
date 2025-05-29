@@ -21,6 +21,7 @@ VERSION="$(cat "${VERSION_FILE:?}")"
 
 source "${REPOSITORY_ROOT:?}"/scripts/tools/colors.sh
 source "${REPOSITORY_ROOT:?}"/scripts/tools/log.sh
+source "${REPOSITORY_ROOT:?}"/scripts/tools/find-replace-versions.sh
 
 description() {
 	cat <<EOF
@@ -41,6 +42,18 @@ help() {
 	echo ''
 	printf "$(usage)\n"
 	exit 0
+}
+
+commit_message() {
+	cat <<EOF
+${NEW_VERSION:?}
+
+Internal versions:
+
+- Dashboard: $(find_version_dashboard)
+- API: $(find_version_api)
+- Server: $(find_version_server)
+EOF
 }
 
 # ===== ARGUMENT PARSING =====
@@ -98,13 +111,14 @@ echo "${NEW_VERSION:?}" > "${VERSION_FILE:?}"
 
 # Create & push a new git tag.
 GIT_BRANCH="$(git branch --show-current)"
+COMMIT_MESSAGE="$(commit_message)"
 echo "Pulling origin…"
 git pull origin "${GIT_BRANCH:?}"
 echo "Committing changes…"
 git add "${VERSION_FILE:?}"
-git commit -m "${NEW_VERSION:?}"
+git commit -m "${COMMIT_MESSAGE:?}"
 echo "Creating tag…"
-git tag "${NEW_VERSION:?}" -m "${NEW_VERSION:?}"
+git tag "${NEW_VERSION:?}" -m "${COMMIT_MESSAGE:?}"
 echo "Pushing tag…"
 git push --atomic origin "${GIT_BRANCH:?}" "${NEW_VERSION:?}"
 
