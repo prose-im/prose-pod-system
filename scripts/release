@@ -50,6 +50,7 @@ ${NEW_VERSION:?}
 
 Internal versions:
 
+- App: $(find_version_app)
 - Dashboard: $(find_version_dashboard)
 - API: $(find_version_api)
 - Server: $(find_version_server)

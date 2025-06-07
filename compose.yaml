@@ -1,6 +1,14 @@
 name: prose
 
 services:
+  # https://github.com/prose-im/prose-app-web
+  app:
+    image: proseim/prose-app-web:${PROSE_APP_WEB_VERSION:-0.10.1}
+    depends_on: [server]
+    ports:
+      - "${PROSE_APP_WEB_PORT:-443}:8080"
+    tty: "${PROSE_APP_WEB_IS_TTY:-${PROSE_POD_IS_TTY:-false}}"
+
   # # https://github.com/prose-im/prose-pod-dashboard
   # dashboard:
   #   image: proseim/prose-pod-dashboard:${PROSE_POD_DASHBOARD_VERSION:-0.1.0}

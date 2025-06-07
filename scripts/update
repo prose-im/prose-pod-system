@@ -16,7 +16,7 @@ source "${REPOSITORY_ROOT:?}"/scripts/tools/log.sh
 source "${REPOSITORY_ROOT:?}"/scripts/tools/find-replace-versions.sh
 
 usage() {
-	echo "Usage: ${SELF:?} [dashboard=X.Y.Z] [api=X.Y.Z] [server=X.Y.Z]"
+	echo "Usage: ${SELF:?} [app=X.Y.Z] [dashboard=X.Y.Z] [api=X.Y.Z] [server=X.Y.Z]"
 }
 help() {
 	usage
@@ -25,6 +25,7 @@ help() {
 
 for arg in "$@"; do
 	case $arg in
+		app=*) NEW_APP_TAG="${arg#'app='}" ;;
 		dashboard=*) NEW_DASHBOARD_TAG="${arg#'dashboard='}" ;;
 		api=*) NEW_API_TAG="${arg#'api='}" ;;
 		server=*) NEW_SERVER_TAG="${arg#'server='}" ;;
@@ -36,6 +37,13 @@ done
 if [[ $# == 0 ]]; then
 	echo 'Since you didn’t pass any version to update, you might be wondering'
 	echo -e 'what the current versions are. Here it is:\n'
+fi
+
+OLD_APP_TAG="$(find_version_app)"
+if [[ -n "${NEW_APP_TAG}" ]]; then
+	echo -e "App: ${Yellow:?}${OLD_APP_TAG:?}${Color_Off:?} -> ${Green:?}${NEW_APP_TAG:?}${Color_Off:?}"
+else
+	echo -e "App: ${Cyan:?}${OLD_APP_TAG:?}${Color_Off:?}"
 fi
 
 OLD_DASHBOARD_TAG="$(find_version_dashboard)"
@@ -67,6 +75,9 @@ fi
 read -p "Proceed? [y/N]: " ok
 [[ "$ok" =~ ^[Yy]$ ]] || exit 1
 
+if [[ -n "${NEW_APP_TAG}" ]]; then
+	replace_version_app "${NEW_APP_TAG:?}"
+fi
 if [[ -n "${NEW_DASHBOARD_TAG}" ]]; then
 	replace_version_dashboard "${NEW_DASHBOARD_TAG:?}"
 fi

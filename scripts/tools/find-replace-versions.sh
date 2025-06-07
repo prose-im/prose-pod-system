@@ -27,6 +27,14 @@ replace_version() {
 # Otherwise, allow pretty much any name, there's no reason to enforce a pattern here.
 DOCKER_TAG_REGEX='[^:}]+'
 
+APP_REGEX='(PROSE_APP_WEB_VERSION:-)('"${DOCKER_TAG_REGEX:?}"')(\}+)'
+find_version_app() {
+	find_version "${APP_REGEX:?}" "${COMPOSE_FILE:?}"
+}
+replace_version_app() {
+	replace_version "${APP_REGEX:?}" "${1:?}" "${COMPOSE_FILE:?}"
+}
+
 DASHBOARD_REGEX='(PROSE_POD_DASHBOARD_VERSION:-)('"${DOCKER_TAG_REGEX:?}"')(\}+)'
 find_version_dashboard() {
 	find_version "${DASHBOARD_REGEX:?}" "${COMPOSE_FILE:?}"
