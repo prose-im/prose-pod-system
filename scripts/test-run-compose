@@ -18,6 +18,8 @@ export PROSODY_CONFIG_DIR="${TEST_DIR}"/etc/prosody
 export PROSE_CONFIG_DIR="${TEST_DIR}"/etc/prose
 export PROSE_ENV_FILE="${PROSE_CONFIG_DIR}"/env
 
+export PROSE_POD_DASHBOARD_IMAGE=ghcr.io/prose-im/prose-pod-dashboard
+
 umask 027
 mkdir -p "${TEST_DIR}"/var/lib/{prosody,prose-pod-api}
 mkdir -p "${TEST_DIR}"/etc/{prosody,prose-pod-api,prose}
