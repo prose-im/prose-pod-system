@@ -6,7 +6,7 @@ services:
     image: ${PROSE_APP_WEB_IMAGE:-proseim/prose-app-web}:${PROSE_APP_WEB_VERSION:-0.10.2}
     depends_on: [server]
     ports:
-      - "${PROSE_APP_WEB_PORT:-443}:8080"
+      - "${PROSE_APP_WEB_PORT:-8080}:8080"
     tty: "${PROSE_APP_WEB_IS_TTY:-${PROSE_POD_IS_TTY:-false}}"
 
   # https://github.com/prose-im/prose-pod-dashboard
