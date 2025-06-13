@@ -35,7 +35,7 @@ services:
       prose-network:
         aliases:
           - prose-pod-api
-    env_file: "${PROSE_POD_API_ENV_FILE:-${PROSE_ENV_FILE:-/etc/prose/env}}"
+    env_file: "${PROSE_POD_API_ENV_FILE:-${PROSE_ENV_FILE:-/etc/prose/prose.env}}"
     tty: "${PROSE_POD_API_IS_TTY:-${PROSE_POD_IS_TTY:-false}}"
 
   # https://github.com/prose-im/prose-pod-server
@@ -57,7 +57,7 @@ services:
         aliases:
           - prose-pod-server
           - prose-pod-server-admin
-    env_file: "${PROSODY_ENV_FILE:-${PROSE_ENV_FILE:-/etc/prose/env}}"
+    env_file: "${PROSODY_ENV_FILE:-${PROSE_ENV_FILE:-/etc/prose/prose.env}}"
     entrypoint: >
       sh -c "cp /usr/share/prose/prosody.bootstrap.cfg.lua /etc/prosody/prosody.cfg.lua && prosody"
     tty: "${PROSE_POD_SERVER_IS_TTY:-${PROSE_POD_IS_TTY:-false}}"
