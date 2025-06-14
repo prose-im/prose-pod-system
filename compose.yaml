@@ -51,11 +51,11 @@ services:
     # NOTE: See [Port and network configuration – Prosody IM](https://prosody.im/doc/ports).
     ports:
       # [Client connections](https://prosody.im/doc/modules/mod_c2s).
-      - "${PROSE_POD_SERVER_PORT_C2S:-5222}:5222"
+      - "${PROSE_POD_SERVER_INTERFACE_C2S:-0.0.0.0}:${PROSE_POD_SERVER_PORT_C2S:-5222}:5222"
       # [Server-to-server connections](https://prosody.im/doc/modules/mod_s2s).
-      - "${PROSE_POD_SERVER_PORT_S2S:-5269}:5269"
+      - "${PROSE_POD_SERVER_INTERFACE_S2S:-0.0.0.0}:${PROSE_POD_SERVER_PORT_S2S:-5269}:5269"
       # [HTTPS](https://prosody.im/doc/http).
-      - "${PROSE_POD_SERVER_PORT_HTTPS:-5281}:5281"
+      - "${PROSE_POD_SERVER_INTERFACE_HTTPS:-0.0.0.0}:${PROSE_POD_SERVER_PORT_HTTPS:-5281}:5281"
     networks:
       prose-network:
         aliases:
