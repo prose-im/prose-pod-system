@@ -18,6 +18,9 @@ export PROSODY_CONFIG_DIR="${TEST_DIR}"/etc/prosody
 export PROSE_CONFIG_DIR="${TEST_DIR}"/etc/prose
 export PROSE_ENV_FILE="${PROSE_CONFIG_DIR}"/prose.env
 
+export PROSE_UID=''
+export PROSE_GID=''
+
 umask 027
 mkdir -p "${TEST_DIR}"/var/lib/{prosody,prose-pod-api}
 mkdir -p "${TEST_DIR}"/etc/{prosody,prose-pod-api,prose}
