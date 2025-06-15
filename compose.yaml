@@ -69,4 +69,5 @@ services:
     tty: "${PROSE_POD_SERVER_IS_TTY:-${PROSE_POD_IS_TTY:-false}}"
 
 networks:
-  prose-network: {}
+  prose-network:
+    enable_ipv6: true
