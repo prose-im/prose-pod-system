@@ -1,0 +1,27 @@
+# Prose Pod API
+# REST API for administrating a Prose Pod
+# Configuration file
+# Documentation: https://docs.prose.org/references/pod-config
+
+# See https://docs.prose.org/references/pod-config/#brandingconfig.
+[branding]
+company_name = "{your_company_name}"
+
+# See https://docs.prose.org/references/pod-config/#serverconfig.
+[server]
+domain = "{your_domain}" # Once set, cannot be changed.
+
+# See https://docs.prose.org/references/pod-config/#podconfig.
+[pod]
+address = { domain = "prose.{your_domain}" }
+dashboard_url = "https://admin.prose.{your_domain}"
+
+# See https://docs.prose.org/references/pod-config/#notifyemailconfig.
+[notify.email]
+pod_address = "prose@{smtp_host}"
+
+smtp_host = "{smtp_host}"
+smtp_port = 587 # Change if needed.
+smtp_username = "{smtp_username}"
+smtp_password = "{smtp_password}"
+smtp_encrypt = false # Change if needed.
