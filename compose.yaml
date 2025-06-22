@@ -25,7 +25,7 @@ services:
 
   # https://github.com/prose-im/prose-pod-api
   api:
-    image: ${PROSE_POD_API_IMAGE:-proseim/prose-pod-api}:${PROSE_POD_API_VERSION:-0.14.1}
+    image: ${PROSE_POD_API_IMAGE:-proseim/prose-pod-api}:${PROSE_POD_API_VERSION:-0.15.0}
     user: ${PROSE_POD_API_UID:-${PROSE_UID-1001}}:${PROSE_POD_API_GID:-${PROSE_GID-1001}}
     depends_on: [server]
     volumes:
