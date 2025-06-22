@@ -6,7 +6,8 @@ After=docker.service
 [Service]
 Type=exec
 WorkingDirectory=/etc/prose
-ExecStart=/usr/bin/docker compose up --force-recreate --remove-orphans --exit-code-from api
+ExecStart=/usr/bin/docker compose up --force-recreate --remove-orphans
+ExecStartPost=/bin/bash -c 'sleep 1 && [ $(docker compose ps --status=exited -q | wc -l) -eq 0 ]'
 ExecStop=/usr/bin/docker compose down
 User=prose
 Environment=COMPOSE_INTERACTIVE_NO_CLI=1
