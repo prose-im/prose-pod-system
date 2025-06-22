@@ -31,6 +31,15 @@ touch "${PROSE_POD_API_DATA_DIR}/database.sqlite"
 umask 077
 touch "${PROSE_CONFIG_DIR}/prose.env"
 
+cat <<EOF >> "${PROSE_POD_API_CONFIG_DIR}/Prose.toml"
+[server]
+domain = "localhost"
+
+[pod]
+address = { domain = "localhost" }
+dashboard_url = "http://localhost:3030/"
+EOF
+
 try-run() {
 	docker compose up -d
 	sleep 1
