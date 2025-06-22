@@ -12,7 +12,7 @@ services:
 
   # https://github.com/prose-im/prose-pod-dashboard
   dashboard:
-    image: ${PROSE_POD_DASHBOARD_IMAGE:-proseim/prose-pod-dashboard}:${PROSE_POD_DASHBOARD_VERSION:-0.0.1}
+    image: ${PROSE_POD_DASHBOARD_IMAGE:-proseim/prose-pod-dashboard}:${PROSE_POD_DASHBOARD_VERSION:-0.0.3}
     user: ${PROSE_POD_DASHBOARD_UID:-${PROSE_UID-0}}:${PROSE_POD_DASHBOARD_GID:-${PROSE_GID-0}}
     depends_on: [api]
     ports:
