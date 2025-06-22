@@ -43,7 +43,7 @@ services:
 
   # https://github.com/prose-im/prose-pod-server
   server:
-    image: ${PROSE_POD_SERVER_IMAGE:-proseim/prose-pod-server}:${PROSE_POD_SERVER_VERSION:-0.3.19}
+    image: ${PROSE_POD_SERVER_IMAGE:-proseim/prose-pod-server}:${PROSE_POD_SERVER_VERSION:-0.3.20}
     user: ${PROSE_POD_SERVER_UID:-${PROSE_UID-1001}}:${PROSE_POD_SERVER_GID:-${PROSE_GID-1001}}
     volumes:
       - "${PROSODY_CONFIG_DIR:-/etc/prosody/}:/etc/prosody/"
