@@ -12,7 +12,6 @@ TEST_NAME="run-$(date +%s)"
 TEST_DIR="./test/${TEST_NAME}"
 
 export PROSE_POD_API_DATA_DIR="${TEST_DIR}"/var/lib/prose-pod-api
-export PROSE_POD_API_CONFIG_DIR="${TEST_DIR}"/etc/prose-pod-api
 export PROSODY_DATA_DIR="${TEST_DIR}"/var/lib/prosody
 export PROSODY_CONFIG_DIR="${TEST_DIR}"/etc/prosody
 export PROSE_CONFIG_DIR="${TEST_DIR}"/etc/prose
@@ -23,21 +22,23 @@ export PROSE_GID=''
 
 umask 027
 mkdir -p "${TEST_DIR}"/var/lib/{prosody,prose-pod-api}
-mkdir -p "${TEST_DIR}"/etc/{prosody,prose-pod-api,prose}
+mkdir -p "${TEST_DIR}"/etc/{prosody,prose}
 mkdir -p "${TEST_DIR}"/etc/prosody/certs
 
 touch "${PROSE_POD_API_DATA_DIR}/database.sqlite"
 
 umask 077
-touch "${PROSE_CONFIG_DIR}/prose.env"
+touch "${PROSE_ENV_FILE}"
 
-cat <<EOF >> "${PROSE_POD_API_CONFIG_DIR}/Prose.toml"
+cat <<EOF >> "${PROSE_CONFIG_DIR}/prose.toml"
 [server]
 domain = "localhost"
 
 [pod]
 address = { domain = "localhost" }
-dashboard_url = "http://localhost:3030/"
+
+[dashboard]
+url = "http://localhost:3030"
 EOF
 
 try-run() {
