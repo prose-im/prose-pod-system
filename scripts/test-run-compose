@@ -38,7 +38,7 @@ domain = "localhost"
 address = { domain = "localhost" }
 
 [dashboard]
-url = "http://localhost:3030"
+url = "http://localhost:8081"
 EOF
 
 try-run() {
