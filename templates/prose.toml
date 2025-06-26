@@ -12,7 +12,7 @@ company_name = "{your_company_name}"
 domain = "{your_domain}" # Once set, cannot be changed.
 
 # See https://docs.prose.org/references/pod-config/#notifyemailconfig.
-[notify.email]
+[notifiers.email]
 smtp_host = "{smtp_host}"
 smtp_port = 587 # Change if needed.
 smtp_username = "{smtp_username}"
