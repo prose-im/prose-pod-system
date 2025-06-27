@@ -34,12 +34,6 @@ cat <<EOF >> "${PROSE_CONFIG_DIR}/prose.toml"
 [server]
 domain = "localhost"
 
-[pod]
-address = { domain = "localhost" }
-
-[dashboard]
-url = "http://localhost:8081"
-
 EOF
 
 try-run() {
