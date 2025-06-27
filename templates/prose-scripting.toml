@@ -9,6 +9,10 @@ company_name = "{company_name}"
 [server]
 domain = "{your_domain}" # Once set, cannot be changed.
 
+# See https://docs.prose.org/references/pod-config/#podconfig.
+[pod]
+address = { domain = "{pod_domain}" }
+
 # See https://docs.prose.org/references/pod-config/#notifyemailconfig.
 [notifiers.email]
 smtp_host = "{smtp_host}"
