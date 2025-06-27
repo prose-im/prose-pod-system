@@ -1,6 +1,4 @@
-# Prose Pod API
-# REST API for administrating a Prose Pod
-# Configuration file
+# Prose configuration file
 # Documentation: https://docs.prose.org/references/pod-config
 
 # See https://docs.prose.org/references/pod-config/#brandingconfig.
