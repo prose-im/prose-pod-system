@@ -40,9 +40,6 @@ address = { domain = "localhost" }
 [dashboard]
 url = "http://localhost:8081"
 
-[debug_use_at_your_own_risk]
-skip_startup_actions = ["test_services_reachability"]
-
 EOF
 
 try-run() {
