@@ -3,7 +3,7 @@ name: prose
 services:
   # https://github.com/prose-im/prose-app-web
   app:
-    image: ${PROSE_APP_WEB_IMAGE:-proseim/prose-app-web}:${PROSE_APP_WEB_VERSION:-0.11.0}
+    image: ${PROSE_APP_WEB_IMAGE:-proseim/prose-app-web}:${PROSE_APP_WEB_VERSION:-0.12.0}
     user: ${PROSE_APP_WEB_UID:-${PROSE_UID-0}}:${PROSE_APP_WEB_GID:-${PROSE_GID-0}}
     depends_on: [server]
     ports:
