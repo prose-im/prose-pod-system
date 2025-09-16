@@ -45,7 +45,7 @@ try-run() {
 	# docker compose logs
 
 	echo -e "\nWarnings:"
-	docker compose logs | grep -i 'warn'
+	docker compose logs | grep -i 'warn' || :
 
 	echo -e "\nErrors:"
 	! docker compose logs | grep -i 'error' || exit 1
