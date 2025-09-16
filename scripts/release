@@ -99,6 +99,11 @@ fi
 # Convert the new version to a string.
 NEW_VERSION=$(echo "${VERSION_COMPONENTS[*]}" | tr ' ' '.')
 
+# Pull remote.
+GIT_BRANCH="$(git branch --show-current)"
+echo "Pulling origin…"
+git pull origin "${GIT_BRANCH:?}"
+
 # Log some useful info.
 echo -e "Pod version: ${Yellow:?}${VERSION:?}${Color_Off:?} -> ${Green:?}${NEW_VERSION:?}${Color_Off:?}"
 echo "New commits:"
@@ -111,10 +116,7 @@ echo "Changing version number in ${VERSION_FILE:?}…"
 echo "${NEW_VERSION:?}" > "${VERSION_FILE:?}"
 
 # Create & push a new git tag.
-GIT_BRANCH="$(git branch --show-current)"
 COMMIT_MESSAGE="$(commit_message)"
-echo "Pulling origin…"
-git pull origin "${GIT_BRANCH:?}"
 echo "Committing changes…"
 git add "${VERSION_FILE:?}"
 git commit -m "${COMMIT_MESSAGE:?}"
