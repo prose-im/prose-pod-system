@@ -16,15 +16,54 @@ source "${REPOSITORY_ROOT:?}"/scripts/tools/log.sh
 source "${REPOSITORY_ROOT:?}"/scripts/tools/find-replace-versions.sh
 
 usage() {
-	echo "Usage: ${SELF:?} [app=X.Y.Z] [dashboard=X.Y.Z] [api=X.Y.Z] [server=X.Y.Z]"
+cat <<EOF
+Usage:
+  Update to all the lastest versions:
+    ${SELF:?} latest
+  Update individual versions:
+    ${SELF:?} [app=X.Y.Z] [dashboard=X.Y.Z] [api=X.Y.Z] [server=X.Y.Z]
+  Update to all the lastest versions except a few (last value takes precedence):
+    ${SELF:?} latest [app=X.Y.Z] [dashboard=X.Y.Z] [api=X.Y.Z] [server=X.Y.Z]
+EOF
 }
 help() {
 	usage
 	exit 0
 }
 
+get_version_from_VERSION_file() {
+	local repo="${1:?"Expected repository name"}" head="${2:-master}"
+	xh GET -b "https://raw.githubusercontent.com/prose-im/${repo}/refs/heads/${head}/VERSION" | sed 's/[[:space:]]*$//'
+}
+get_version_from_package_json() {
+	local repo="${1:?"Expected repository name"}" head="${2:-master}"
+	xh GET -b "https://raw.githubusercontent.com/prose-im/${repo}/refs/heads/${head}/package.json" | jq -r '.version'
+}
+get_latest_version() {
+	local component="${1:?"Expected a Prose Pod component name"}"
+
+	case $component in
+		app) get_version_from_package_json prose-app-web ;;
+		dashboard) get_version_from_package_json prose-pod-dashboard ;;
+		api) get_version_from_VERSION_file prose-pod-api ;;
+		server) get_version_from_VERSION_file prose-pod-server ;;
+		*) die 'Unknown component: `'"$component"'`.' ;;
+	esac
+}
+
+if [ $# -eq 0 ]; then
+	echo -e 'No version provided, updating to latest versions…\n'
+	set -- latest
+fi
+
 for arg in "$@"; do
 	case $arg in
+		latest)
+			NEW_APP_TAG="$(get_latest_version app)"
+			NEW_DASHBOARD_TAG="$(get_latest_version dashboard)"
+			NEW_API_TAG="$(get_latest_version api)"
+			NEW_SERVER_TAG="$(get_latest_version server)"
+			;;
 		app=*) NEW_APP_TAG="${arg#'app='}" ;;
 		dashboard=*) NEW_DASHBOARD_TAG="${arg#'dashboard='}" ;;
 		api=*) NEW_API_TAG="${arg#'api='}" ;;
@@ -33,11 +72,6 @@ for arg in "$@"; do
 		*) error 'Unknown argument: `'"$arg"'`.'; echo "$(usage)"; die ;;
 	esac
 done
-
-if [[ $# == 0 ]]; then
-	echo 'Since you didn’t pass any version to update, you might be wondering'
-	echo -e 'what the current versions are. Here it is:\n'
-fi
 
 OLD_APP_TAG="$(find_version_app)"
 if [[ -n "${NEW_APP_TAG}" ]]; then
@@ -65,11 +99,6 @@ if [[ -n "${NEW_SERVER_TAG}" ]]; then
 	echo -e "Server: ${Yellow:?}${OLD_SERVER_TAG:?}${Color_Off:?} -> ${Green:?}${NEW_SERVER_TAG:?}${Color_Off:?}"
 else
 	echo -e "Server: ${Cyan:?}${OLD_SERVER_TAG:?}${Color_Off:?}"
-fi
-
-if [[ $# == 0 ]]; then
-	echo -e '\nIf you didn’t know how to use the command, here’s how:'
-	help
 fi
 
 read -p "Proceed? [y/N]: " ok
