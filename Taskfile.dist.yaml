@@ -14,3 +14,7 @@ tasks:
   release:
     desc: Create a new Prose Pod release
     cmd: ./scripts/release {{ .CLI_ARGS }}
+
+  dev:provision:hetzner:
+    desc: Provision a Hetzner
+    cmd: ./scripts/provision-hetzner

@@ -1,0 +1,146 @@
+#!/usr/bin/env bash
+
+##
+# This file is part of prose-pod-system
+#
+# Copyright 2026, Prose Foundation
+# SPDX-License-Identifier: MPL-2.0
+#
+# Authors:
+# - 2026, Rémi Bardon <remi@remibardon.name>
+##
+
+##
+# `prose-get` (`https://get.prose.org`) integration tests.
+#
+# Made to be ran on a dev’s computer, not in an automated environment.
+# Not made to support all possible scenarios, but rather just the ones
+# meaningful to Prose developers (e.g. only APIs of DNS providers Prose
+# developers use for their testing domain are supported).
+##
+
+set -eu
+
+
+# ===== UTILITIES =====
+
+: ${SCRIPTS_DIR:="$(dirname $0)"}
+: ${BASH_TOOLBOX:="${SCRIPTS_DIR:?}"/bash-toolbox}
+for util in die edo format log; do
+  source "${BASH_TOOLBOX:?}/${util:?}.sh"
+done
+# TODO: Make `porkbun` configurable.
+source "${SCRIPTS_DIR:?}"/dns-apis.sh porkbun
+source "${SCRIPTS_DIR:?}"/hetzner/prelude.sh
+
+usage() {
+  error 'Not implemented yet.'
+}
+
+help() {
+  error 'Not implemented yet.'
+}
+
+
+# ===== CONSTANTS =====
+
+if [ -z "${HETZNER_SSH_KEY:+redacted}" ]; then
+  error "$(format_code HETZNER_SSH_KEY) must be defined in $(format_code test.env), and it must"
+  error "be the name of a Hetzner Cloud SSH key."
+  die
+fi
+
+
+# ===== DEPENDENCIES =====
+
+if ! command -v hcloud >/dev/null 2>&1; then
+  edo brew install hcloud
+  info "$(format_code hcloud) was installed. This script won’t need it, but if you want to play around"
+  info "you can $(format_hyperlink 'setup auto-completion' 'https://github.com/hetznercloud/cli/blob/main/docs/tutorials/setup-hcloud-cli.md#2-optional-setup-auto-completion')."
+fi
+
+
+# ===== ARGUMENT PARSING =====
+
+# === Default values ===
+
+# NOTE: See all using `hcloud datacenter list`.
+# HETZNER_LOCATION=fsn1 # nbg1
+
+# NOTE: See all using `hcloud server-type list`.
+HETZNER_TYPE=cx23 # cax11
+
+# NOTE: See all using `hcloud image list -t system --sort name`.
+HETZNER_IMAGE=debian-13
+
+# === Argument parsing ===
+
+for arg in "$@"; do
+  case $arg in
+    --location=*) HETZNER_LOCATION="${arg#'--location='}" ;;
+    --type=*) HETZNER_TYPE="${arg#'--type='}" ;;
+    --image=*) HETZNER_IMAGE="${arg#'--image='}" ;;
+    --name=*) SERVER_NAME="${arg#'--name='}" ;;
+    --ipv4) WITH_IPV4=1 ;;
+    --ipv6) WITH_IPV6=1 ;;
+    --help) help ;;
+    --dry-run) export DRY_RUN=1 ;;
+    --debug) export LOG_LEVEL=debug ;;
+    --trace) export LOG_LEVEL=trace ;;
+    *) error "Unknown argument: $(format_code $arg)."; info "$(usage)"; die ;;
+  esac
+done
+
+# === Input validation ===
+
+if ! (( ${WITH_IPV4:-0} || ${WITH_IPV6:-0} )); then
+  info "Neither of $(format_code '--ipv4') nor $(format_code '--ipv6') was passed; defaulting to cheaper IPv6."
+  WITH_IPV6=1
+fi
+
+if [ -z "${HETZNER_TYPE-}" ]; then
+  die "$(format_code '--type=<type>') is required. See all using $(format_code 'hcloud server-type list')."
+fi
+
+if [ -z "${HETZNER_IMAGE-}" ]; then
+  die "$(format_code '--image=<image>') is required. See all using $(format_code 'hcloud image list -t system --sort name')."
+fi
+
+# === Apply dynamic default values ===
+
+: ${SERVER_NAME:="prose-dev-${HETZNER_TYPE:?}-${HETZNER_IMAGE:?}-$(date +%s)"}
+
+
+# ===== SETUP =====
+
+hetzner_setup prose-dev
+
+
+# ===== MAIN LOGIC =====
+
+cleanup() {
+  hetzner_server_delete "${SERVER_NAME:?}"
+}
+trap cleanup EXIT
+
+# hcloud server list
+
+(
+  SSH_KEY="${HETZNER_SSH_KEY:?}"
+  WITH_IPV4="${WITH_IPV4:?}"
+  WITH_IPV6="${WITH_IPV6:?}"
+  LOCATION="${HETZNER_LOCATION-}"
+  hetzner_server_create "${SERVER_NAME:?}" "${HETZNER_TYPE:?}" "${HETZNER_IMAGE:?}"
+)
+
+list_dns_records | jq
+
+# ---
+
+# hcloud server
+# Power/Reboot:
+#   poweroff                    Poweroff a Server
+#   poweron                     Poweron a server
+#   reboot                      Reboot a server
+#   reset                       Reset a Server
+#   shutdown                    Shutdown a server
