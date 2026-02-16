@@ -12,5 +12,9 @@ jobs:
         with:
           submodules: true
 
-      - name: Test Compose file
-        run: ./scripts/test-run-compose
+      # NOTE: Recommended by [the Task documentation](https://taskfile.dev/installation/#github-actions).
+      - name: Install Task
+        uses: arduino/setup-task@v2
+
+      - name: Run tests
+        run: task test

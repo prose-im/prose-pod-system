@@ -11,6 +11,10 @@ tasks:
     desc: Update which versions of Prose Pod Server and Prose Pod API to use.
     cmd: ./scripts/update {{ .CLI_ARGS }}
 
+  test:
+    desc: Run some tests to ensure everything works before releasing.
+    cmd: ./scripts/test-run-compose {{ .CLI_ARGS }}
+
   release:
     desc: Create a new Prose Pod release
     cmd: ./scripts/release {{ .CLI_ARGS }}
