@@ -32,11 +32,11 @@ $(format_title 'Syntax:')
     and $(format_arg X.Y.Z) is the new version of said service.
 
 $(format_title 'Usage:')
-  Update to all the lastest versions:
+  Update to all the latest versions:
     $(format_command "${SELF:?}") $(format_arg latest)
   Update individual versions:
     $(format_command "${SELF:?}") $(format_opt_arg 'app=X.Y.Z') $(format_opt_arg 'dashboard=X.Y.Z') $(format_opt_arg 'api=X.Y.Z') $(format_opt_arg 'server=X.Y.Z')
-  Update to all the lastest versions except a few (last value takes precedence):
+  Update to all the latest versions except a few (last value takes precedence):
     $(format_command "${SELF:?}") $(format_arg latest) $(format_opt_arg 'app=X.Y.Z') $(format_opt_arg 'dashboard=X.Y.Z') $(format_opt_arg 'api=X.Y.Z') $(format_opt_arg 'server=X.Y.Z')
 
 $(format_title 'Options:')
