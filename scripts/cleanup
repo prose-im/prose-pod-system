@@ -12,7 +12,7 @@
 
 set -e
 
-PROSE_POD_SYSTEM_DIR=${PROSE_POD_SYSTEM_DIR:-"$(dirname "$0")"/..};
+PROSE_POD_SYSTEM_DIR=${PROSE_POD_SYSTEM_DIR:-"$(realpath "$(dirname "$0")"/..)"};
 SERVER_ROOT=${SERVER_ROOT:-"${PROSE_POD_SYSTEM_DIR:?}"/server/pod};
 DATABASE_PATH="${DATABASE_PATH-"${PROSE_POD_SYSTEM_DIR}"/database.sqlite}";
 
