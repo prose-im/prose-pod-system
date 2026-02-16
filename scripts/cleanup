@@ -1,9 +1,13 @@
 #!/usr/bin/env bash
 
 ##
-#  This file is part of prose-pod-system
+# This file is part of prose-pod-system
 #
-#  Copyright 2024, Prose Foundation
+# Copyright 2024–2026, Prose Foundation
+# SPDX-License-Identifier: MPL-2.0
+#
+# Authors:
+# - 2024–2026, Rémi Bardon <remi@remibardon.name>
 ##
 
 set -e

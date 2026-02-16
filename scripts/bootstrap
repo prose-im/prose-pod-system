@@ -1,9 +1,14 @@
 #!/usr/bin/env bash
 
 ##
-#  This file is part of prose-pod-system
+# This file is part of prose-pod-system
 #
-#  Copyright 2023, Prose Foundation
+# Copyright 2023–2026, Prose Foundation
+# SPDX-License-Identifier: MPL-2.0
+#
+# Authors:
+# - 2023, Valerian Saliou <valerian@valeriansaliou.name>
+# - 2024–2026, Rémi Bardon <remi@remibardon.name>
 ##
 
 ABSPATH=$(cd "$(dirname "$0")/../"; pwd)

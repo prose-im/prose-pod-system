@@ -1,9 +1,13 @@
 #!/bin/bash
 
 ##
-#  This file is part of prose-pod-system
+# This file is part of prose-pod-system
 #
-#  Copyright 2025, Prose Foundation
+# Copyright 2025, Prose Foundation
+# SPDX-License-Identifier: MPL-2.0
+#
+# Authors:
+# - 2025, Rémi Bardon <remi@remibardon.name>
 ##
 
 source "${REPOSITORY_ROOT:?}"/scripts/tools/colors.sh
