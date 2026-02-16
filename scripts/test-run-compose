@@ -21,6 +21,7 @@ TEST_NAME="run-$(date +%s)"
 TEST_DIR="./test/${TEST_NAME}"
 
 export PROSE_POD_API_DATA_DIR="${TEST_DIR}"/var/lib/prose-pod-api
+export PROSE_POD_SERVER_DATA_DIR="${TEST_DIR}"/var/lib/prose-pod-server
 export PROSODY_DATA_DIR="${TEST_DIR}"/var/lib/prosody
 export PROSODY_CONFIG_DIR="${TEST_DIR}"/etc/prosody
 export PROSE_CONFIG_DIR="${TEST_DIR}"/etc/prose
@@ -121,7 +122,7 @@ if [ "${DRY_RUN:-0}" -ne 0 ]; then
 fi
 
 umask 027
-mkdir -p "${TEST_DIR}"/var/lib/{prosody,prose-pod-api}
+mkdir -p "${TEST_DIR}"/var/lib/{prosody,prose-pod-server,prose-pod-api}
 mkdir -p "${TEST_DIR}"/etc/{prosody,prose}
 mkdir -p "${TEST_DIR}"/etc/prosody/certs
 

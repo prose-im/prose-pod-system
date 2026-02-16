@@ -3,7 +3,7 @@ name: prose
 services:
   # https://github.com/prose-im/prose-app-web
   app:
-    image: ${PROSE_APP_WEB_IMAGE:-proseim/prose-app-web}:${PROSE_APP_WEB_VERSION:-0.14.0}
+    image: ${PROSE_APP_WEB_IMAGE:-proseim/prose-app-web}:${PROSE_APP_WEB_VERSION:-0.14.1}
     user: ${PROSE_APP_WEB_UID:-${PROSE_UID-0}}:${PROSE_APP_WEB_GID:-${PROSE_GID-0}}
     depends_on: [server]
     ports:
@@ -25,7 +25,7 @@ services:
 
   # https://github.com/prose-im/prose-pod-api
   api:
-    image: ${PROSE_POD_API_IMAGE:-proseim/prose-pod-api}:${PROSE_POD_API_VERSION:-0.19.2}
+    image: ${PROSE_POD_API_IMAGE:-proseim/prose-pod-api}:${PROSE_POD_API_VERSION:-0.20.0}
     user: ${PROSE_POD_API_UID:-${PROSE_UID-1001}}:${PROSE_POD_API_GID:-${PROSE_GID-1001}}
     depends_on: [server]
     volumes:
@@ -43,9 +43,13 @@ services:
 
   # https://github.com/prose-im/prose-pod-server
   server:
-    image: ${PROSE_POD_SERVER_IMAGE:-proseim/prose-pod-server}:${PROSE_POD_SERVER_VERSION:-0.3.24}
+    image: ${PROSE_POD_SERVER_IMAGE:-proseim/prose-pod-server}:${PROSE_POD_SERVER_VERSION:-0.4.2}
     user: ${PROSE_POD_SERVER_UID:-${PROSE_UID-1001}}:${PROSE_POD_SERVER_GID:-${PROSE_GID-1001}}
     volumes:
+      # NOTE: `/etc/prose` cannot be read-only because we need to
+      #   override it when doing a factory reset (and only then).
+      - "${PROSE_CONFIG_DIR:-/etc/prose}/:/etc/prose/"
+      - "${PROSE_POD_SERVER_DATA_DIR:-/var/lib/prose-pod-server}:/var/lib/prose-pod-server/"
       - "${PROSODY_CONFIG_DIR:-/etc/prosody}/:/etc/prosody/"
       - "${PROSODY_DATA_DIR:-/var/lib/prosody}/:/var/lib/prosody/"
     # NOTE: See [Port and network configuration – Prosody IM](https://prosody.im/doc/ports).
@@ -62,10 +66,7 @@ services:
       prose-network:
         aliases:
           - prose-pod-server
-          - prose-pod-server-admin
     env_file: "${PROSODY_ENV_FILE:-${PROSE_ENV_FILE:-${PROSE_CONFIG_DIR:-/etc/prose}/prose.env}}"
-    entrypoint: >
-      sh -c "cp /usr/share/prose/prosody.bootstrap.cfg.lua /etc/prosody/prosody.cfg.lua && prosody"
     tty: "${PROSE_POD_SERVER_IS_TTY:-${PROSE_POD_IS_TTY:-false}}"
 
 networks:
