@@ -12,6 +12,11 @@
 
 set -eu -o pipefail
 
+
+# ===== CONSTANTS =====
+
+: ${SELF:="$(basename $0)"}
+
 TEST_NAME="run-$(date +%s)"
 TEST_DIR="./test/${TEST_NAME}"
 
@@ -21,8 +26,99 @@ export PROSODY_CONFIG_DIR="${TEST_DIR}"/etc/prosody
 export PROSE_CONFIG_DIR="${TEST_DIR}"/etc/prose
 export PROSE_ENV_FILE="${PROSE_CONFIG_DIR}"/prose.env
 
-export PROSE_UID=''
-export PROSE_GID=''
+unset PROSE_UID PROSE_GID
+export PROSE_POD_IS_TTY=true
+
+
+# ===== HELPER FUNCTIONS =====
+
+: ${SCRIPTS_DIR:="$(dirname $0)"}
+: ${BASH_TOOLBOX:="${SCRIPTS_DIR:?}"/bash-toolbox}
+for util in die format log; do
+  source "${BASH_TOOLBOX:?}/${util:?}.sh"
+done
+
+description() {
+  cat <<EOF
+${Bold}Tests that the Compose file is correct.${Bold_Off}
+
+This script runs the provided Compose file with multiple Prose configurations,
+and logs warnings and errors if they occur.
+EOF
+}
+
+usage() {
+  cat <<EOF
+$(format_title 'Syntax:')
+  $(format_command "${SELF}") $(format_opt_arg '--SERVICE-tag=TAG') $(format_opt_arg '--SERVICE-repository=REPOSITORY')
+
+$(format_title 'Usage:')
+  Test the released images:
+    $(format_command "${SELF%' --'}")
+  Test the locally-built Pod Server image:
+    $(format_command "${SELF:?}") $(format_arg '--server-tag=local')
+    $(format_secondary "(Use after running $(format_code 'task dev:build') in $(format_hyperlink 'prose-pod-server' 'https://github.com/prose-im/prose-pod-server').)")
+  Test the Pod API image published by “remibardon”:
+    $(format_command "${SELF:?}") $(format_arg '--api-repository=remibardon')
+
+$(format_title 'Options:')
+  $(format_subtitle 'Docker images specifiers:')
+    $(format_flag --SERVICE-tag=TAG)
+      Where $(format_code SERVICE) is one of: api server and $(format_code TAG) is a Docker image tag
+      (e.g. $(format_code '0.4.0')).
+    $(format_flag --SERVICE-repository=REPOSITORY)
+      Where $(format_code SERVICE) is one of: api server and $(format_code REPOSITORY) is a Docker
+      repository (e.g. $(format_code 'ghcr.io/prose-im')). Note that it can be a single
+      namespace (e.g. $(format_code 'remibardon')) if this namespace exists on Docker Hub.
+
+  $(format_subtitle 'Miscellaneous options:')
+    $(format_flag --help)
+      Explains what the command does and how to use it.
+    $(format_flag --debug)
+      Log debug messages when running the script.
+    $(format_flag --trace)
+      Log tracing messages when running the script.
+EOF
+}
+
+help() {
+  printf "$(description)\n"
+  echo ''
+  printf "$(usage)\n"
+  exit 0
+}
+
+
+# ===== ARGUMENT PARSING =====
+
+for arg in "$@"; do
+  case $arg in
+    --api-tag=*)
+      export PROSE_POD_API_VERSION="${arg#'--api-tag='}"
+      ;;
+    --api-registry=*)
+      export PROSE_POD_API_IMAGE="${arg#'--api-registry='}/prose-pod-api"
+      ;;
+    --server-tag=*)
+      export PROSE_POD_SERVER_VERSION="${arg#'--server-tag='}"
+      ;;
+    --server-registry=*)
+      export PROSE_POD_SERVER_IMAGE="${arg#'--server-registry='}/prose-pod-server"
+      ;;
+    --help) help ;;
+    --dry-run) export DRY_RUN=1 ;;
+    --debug) export LOG_LEVEL=debug ;;
+    --trace) export LOG_LEVEL=trace ;;
+    *) error "Unknown argument: $(format_code "$arg")."; info "$(usage)"; die ;;
+  esac
+done
+
+
+# ===== MAIN LOGIC =====
+
+if [ "${DRY_RUN:-0}" -ne 0 ]; then
+  die 'Dry run mode not supported.'
+fi
 
 umask 027
 mkdir -p "${TEST_DIR}"/var/lib/{prosody,prose-pod-api}
@@ -34,37 +130,88 @@ touch "${PROSE_POD_API_DATA_DIR}/database.sqlite"
 umask 077
 touch "${PROSE_ENV_FILE}"
 
-cat <<EOF >> "${PROSE_CONFIG_DIR}/prose.toml"
-[server]
-domain = "localhost"
+try_run() {
+  local all_services=($(docker compose config --services))
 
-EOF
+  # info 'Docker Compose config:'
+  # docker compose config
+  # printf '\n'
 
-try-run() {
-	docker compose up -d
-	sleep 1
-	docker compose stop
+  docker compose up -d
+  printf '\n'
+  sleep 1
 
-	# echo "All logs:"
-	# docker compose logs
+  local running_services=($(docker compose ps --services --filter status=running))
 
-	echo -e "\nWarnings:"
-	docker compose logs | grep -i 'warn' || :
+  local crashed_services=()
+  for service in "${all_services[@]}"; do
+    case " ${running_services[*]} " in
+      *" ${service} "*) ;;
+      *) crashed_services+=("${service}") ;;
+    esac
+  done
 
-	echo -e "\nErrors:"
-	! docker compose logs | grep -i 'error' || exit 1
+  if [ -n "${crashed_services[*]}" ]; then
+    error "Some services stopped unexpectedly: ${crashed_services[*]}"
+    printf '\n'
+
+    for service in "${crashed_services[@]}"; do
+      docker compose logs "${service}" # --no-log-prefix
+      printf '\n'
+    done
+
+    die
+  fi
+
+  docker compose stop
+  printf '\n'
+
+  # info 'All logs:'
+  # docker compose logs
+
+  info 'Warnings (not ordered!):'
+  docker compose logs | grep -i 'warn' || success '(No warning)'
+  printf '\n'
+
+  info 'Errors (not ordered!):'
+  ! docker compose logs | grep -i '[^:]error[^:]' && success '(No error)' || exit 1
+  printf '\n'
 }
 
-try-run
+reset_prose_conf() {
+  cat <<EOF > "${PROSE_CONFIG_DIR}/prose.toml"
+[server]
+domain = "test.local"
+EOF
+}
+
+reset_prose_env() {
+  : > "${PROSE_CONFIG_DIR}/prose.env"
+}
 
 # Test a bit of configuration.
-export PROSE_POD_IS_TTY=true
-umask 077
+reset_prose_conf
+cat <<EOF >> "${PROSE_CONFIG_DIR}/prose.toml"
+
+[log]
+level = "debug"
+timer = "uptime"
+EOF
+
+reset_prose_env
 cat <<EOF >> "${PROSE_CONFIG_DIR}/prose.env"
 PROSE_LOG__FORMAT=full
 PROSE_LOG__WITH_ANSI=true
 EOF
 
-try-run
+try_run
+
+# Test with minimal configuration.
+# NOTE: Testing this last so the first fails have a more readable formatting.
+#   Usually it’s the first test which will fail, so let’s make logs more
+#   human-readable to facilitate debugging :)
+reset_prose_conf
+reset_prose_env
+try_run
 
 rm -rf "${TEST_DIR}/"
