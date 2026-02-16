@@ -13,21 +13,42 @@
 set -e
 
 : ${SELF:="$(basename $0)"}
-: ${REPOSITORY_ROOT:="$(dirname "$0")"/..};
+: ${REPOSITORY_ROOT:="$(realpath "$(dirname "$0")"/..)"};
 
-source "${REPOSITORY_ROOT:?}"/scripts/tools/colors.sh
-source "${REPOSITORY_ROOT:?}"/scripts/tools/log.sh
-source "${REPOSITORY_ROOT:?}"/scripts/tools/find-replace-versions.sh
+: ${SCRIPTS_DIR:="$(dirname $0)"}
+: ${BASH_TOOLBOX:="${SCRIPTS_DIR:?}"/bash-toolbox}
+for util in colors edo log yes-no; do
+  source "${BASH_TOOLBOX:?}/${util:?}.sh"
+done
+source "${SCRIPTS_DIR:?}"/tools/find-replace-versions.sh
+
+SERVICES=(app dashboard api server)
 
 usage() {
 cat <<EOF
-Usage:
+$(format_title 'Syntax:')
+  $(format_command "${SELF}") $(format_opt_arg latest) $(format_opt_arg SERVICE=X.Y.Z)...
+    Where $(format_arg SERVICE) is one of: ${SERVICES[@]}
+    and $(format_arg X.Y.Z) is the new version of said service.
+
+$(format_title 'Usage:')
   Update to all the lastest versions:
-    ${SELF:?} latest
+    $(format_command "${SELF:?}") $(format_arg latest)
   Update individual versions:
-    ${SELF:?} [app=X.Y.Z] [dashboard=X.Y.Z] [api=X.Y.Z] [server=X.Y.Z]
+    $(format_command "${SELF:?}") $(format_opt_arg 'app=X.Y.Z') $(format_opt_arg 'dashboard=X.Y.Z') $(format_opt_arg 'api=X.Y.Z') $(format_opt_arg 'server=X.Y.Z')
   Update to all the lastest versions except a few (last value takes precedence):
-    ${SELF:?} latest [app=X.Y.Z] [dashboard=X.Y.Z] [api=X.Y.Z] [server=X.Y.Z]
+    $(format_command "${SELF:?}") $(format_arg latest) $(format_opt_arg 'app=X.Y.Z') $(format_opt_arg 'dashboard=X.Y.Z') $(format_opt_arg 'api=X.Y.Z') $(format_opt_arg 'server=X.Y.Z')
+
+$(format_title 'Options:')
+  $(format_subtitle 'Miscellaneous options:')
+    $(format_flag --help)
+      Explains what the command does and how to use it.
+    $(format_flag --dry-run)
+      Do a dry run (i.e. print what would be executed instead of running it).
+    $(format_flag --debug)
+      Log debug messages when running the script.
+    $(format_flag --trace)
+      Log tracing messages when running the script.
 EOF
 }
 help() {
@@ -37,11 +58,11 @@ help() {
 
 get_version_from_VERSION_file() {
 	local repo="${1:?"Expected repository name"}" head="${2:-master}"
-	xh GET -b "https://raw.githubusercontent.com/prose-im/${repo}/refs/heads/${head}/VERSION" | sed 's/[[:space:]]*$//'
+	edo xh GET -b "https://raw.githubusercontent.com/prose-im/${repo}/refs/heads/${head}/VERSION" \| sed 's/[[:space:]]*$//'
 }
 get_version_from_package_json() {
 	local repo="${1:?"Expected repository name"}" head="${2:-master}"
-	xh GET -b "https://raw.githubusercontent.com/prose-im/${repo}/refs/heads/${head}/package.json" | jq -r '.version'
+	edo xh GET -b "https://raw.githubusercontent.com/prose-im/${repo}/refs/heads/${head}/package.json" \| jq -r '.version'
 }
 get_latest_version() {
 	local component="${1:?"Expected a Prose Pod component name"}"
@@ -56,7 +77,7 @@ get_latest_version() {
 }
 
 if [ $# -eq 0 ]; then
-	echo -e 'No version provided, updating to latest versions…\n'
+	info 'No version provided, updating to latest versions…'
 	set -- latest
 fi
 
@@ -73,40 +94,42 @@ for arg in "$@"; do
 		api=*) NEW_API_TAG="${arg#'api='}" ;;
 		server=*) NEW_SERVER_TAG="${arg#'server='}" ;;
 		--help) help ;;
-		*) error 'Unknown argument: `'"$arg"'`.'; echo "$(usage)"; die ;;
+		--dry-run) export DRY_RUN=1 ;;
+		--debug) export LOG_LEVEL=debug ;;
+		--trace) export LOG_LEVEL=trace ;;
+		*) error 'Unknown argument: `'"$arg"'`.'; info "$(usage)"; die ;;
 	esac
 done
 
 OLD_APP_TAG="$(find_version_app)"
 if [[ -n "${NEW_APP_TAG}" ]] && [[ "${NEW_APP_TAG}" != "${OLD_APP_TAG:?}" ]]; then
-	echo -e "App: ${Yellow:?}${OLD_APP_TAG:?}${Color_Off:?} -> ${Green:?}${NEW_APP_TAG:?}${Color_Off:?}"
+	info "App: $(fg_yellow "${OLD_APP_TAG:?}") -> $(fg_green "${NEW_APP_TAG:?}")"
 else
-	echo -e "App: ${Cyan:?}${OLD_APP_TAG:?}${Color_Off:?}"
+	info "App: $(fg_cyan "${OLD_APP_TAG:?}")"
 fi
 
 OLD_DASHBOARD_TAG="$(find_version_dashboard)"
 if [[ -n "${NEW_DASHBOARD_TAG}" ]] && [[ "${NEW_DASHBOARD_TAG}" != "${OLD_DASHBOARD_TAG:?}" ]]; then
-	echo -e "Dashboard: ${Yellow:?}${OLD_DASHBOARD_TAG:?}${Color_Off:?} -> ${Green:?}${NEW_DASHBOARD_TAG:?}${Color_Off:?}"
+	info "Dashboard: $(fg_yellow "${OLD_DASHBOARD_TAG:?}") -> $(fg_green "${NEW_DASHBOARD_TAG:?}")"
 else
-	echo -e "Dashboard: ${Cyan:?}${OLD_DASHBOARD_TAG:?}${Color_Off:?}"
+	info "Dashboard: $(fg_cyan "${OLD_DASHBOARD_TAG:?}")"
 fi
 
 OLD_API_TAG="$(find_version_api)"
 if [[ -n "${NEW_API_TAG}" ]] && [[ "${NEW_API_TAG}" != "${OLD_API_TAG:?}" ]]; then
-	echo -e "API: ${Yellow:?}${OLD_API_TAG:?}${Color_Off:?} -> ${Green:?}${NEW_API_TAG:?}${Color_Off:?}"
+	info "API: $(fg_yellow "${OLD_API_TAG:?}") -> $(fg_green "${NEW_API_TAG:?}")"
 else
-	echo -e "API: ${Cyan:?}${OLD_API_TAG:?}${Color_Off:?}"
+	info "API: $(fg_cyan "${OLD_API_TAG:?}")"
 fi
 
 OLD_SERVER_TAG="$(find_version_server)"
 if [[ -n "${NEW_SERVER_TAG}" ]] && [[ "${NEW_SERVER_TAG}" != "${OLD_SERVER_TAG:?}" ]]; then
-	echo -e "Server: ${Yellow:?}${OLD_SERVER_TAG:?}${Color_Off:?} -> ${Green:?}${NEW_SERVER_TAG:?}${Color_Off:?}"
+	info "Server: $(fg_yellow "${OLD_SERVER_TAG:?}") -> $(fg_green "${NEW_SERVER_TAG:?}")"
 else
-	echo -e "Server: ${Cyan:?}${OLD_SERVER_TAG:?}${Color_Off:?}"
+	info "Server: $(fg_cyan "${OLD_SERVER_TAG:?}")"
 fi
 
-read -p "Proceed? [y/N]: " ok
-[[ "$ok" =~ ^[Yy]$ ]] || exit 1
+ask_yes_no 'Proceed?' n || exit 1
 
 if [[ -n "${NEW_APP_TAG}" ]]; then
 	replace_version_app "${NEW_APP_TAG:?}"

@@ -10,9 +10,12 @@
 # - 2025, Rémi Bardon <remi@remibardon.name>
 ##
 
-source "${REPOSITORY_ROOT:?}"/scripts/tools/colors.sh
-source "${REPOSITORY_ROOT:?}"/scripts/tools/log.sh
-source "${REPOSITORY_ROOT:?}"/scripts/tools/replace.sh
+: ${SCRIPTS_DIR:="$(realpath "$(dirname "$0")"/..)"}
+: ${BASH_TOOLBOX:="${SCRIPTS_DIR:?}"/bash-toolbox}
+for util in die edo format log; do
+  source "${BASH_TOOLBOX:?}/${util:?}.sh"
+done
+source "${SCRIPTS_DIR:?}"/tools/replace.sh
 
 : ${COMPOSE_FILE:="${REPOSITORY_ROOT:?}"/compose.yaml}
 

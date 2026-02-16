@@ -12,20 +12,25 @@
 
 set -e
 
+
 # ===== CONSTANTS =====
 
 : ${SELF:="$(basename $0)"}
 
-: ${REPOSITORY_ROOT:="$(dirname "$0")"/..};
+: ${REPOSITORY_ROOT:="$(realpath "$(dirname "$0")"/..)"};
 VERSION_FILE="${REPOSITORY_ROOT:?}"/VERSION
 
 VERSION="$(cat "${VERSION_FILE:?}")"
 
+
 # ===== HELPER FUNCTIONS =====
 
-source "${REPOSITORY_ROOT:?}"/scripts/tools/colors.sh
-source "${REPOSITORY_ROOT:?}"/scripts/tools/log.sh
-source "${REPOSITORY_ROOT:?}"/scripts/tools/find-replace-versions.sh
+: ${SCRIPTS_DIR:="$(dirname $0)"}
+: ${BASH_TOOLBOX:="${SCRIPTS_DIR:?}"/bash-toolbox}
+for util in colors edo log; do
+  source "${BASH_TOOLBOX:?}/${util:?}.sh"
+done
+source "${SCRIPTS_DIR:?}"/tools/find-replace-versions.sh
 
 description() {
 	cat <<EOF
@@ -37,7 +42,8 @@ EOF
 
 usage() {
 	cat <<EOF
-Usage: ${SELF:?} major|minor|patch [--help]
+$(format_title 'Usage:')
+  $(format_command "${SELF:?}") $(format_arg 'major|minor|patch') $(format_opt_arg '--help')
 EOF
 }
 
@@ -61,10 +67,28 @@ Internal versions:
 EOF
 }
 
+
 # ===== ARGUMENT PARSING =====
 
 VERSION_COMPONENTS=($(echo "${VERSION:?}" | tr '.' ' '))
 
+# Process non-positional arguments.
+ARGS_=()
+for arg in "$@"; do
+	case $arg in
+		--force) FORCE=1 ;;
+		--help) help ;;
+		--dry-run) export DRY_RUN=1 ;;
+		--debug) export LOG_LEVEL=debug ;;
+		--trace) export LOG_LEVEL=trace ;;
+		*) ARGS_+=("$arg") ;;
+	esac
+done
+# Update command args so we can then list test names.
+set -- "${ARGS_[@]}"
+unset ARGS_
+
+# Process positional arguments.
 case "$1" in
 	major)
 		VERSION_COMPONENTS[0]=$(( VERSION_COMPONENTS[0] + 1 ))
@@ -78,20 +102,22 @@ case "$1" in
 	patch)
 		VERSION_COMPONENTS[2]=$(( VERSION_COMPONENTS[2] + 1 ))
 		;;
-	--help) help ;;
-	'') error 'Expected at least one argument (`major`, `minor` or `patch`).'; echo "$(usage)"; die ;;
-	*) error "Unknown argument: $1."; echo "$(usage)"; die ;;
+	'')
+		error "Expected at least one positional argument ($(format_code major), $(format_code minor) or $(format_code patch))."
+		info "$(usage)"
+		die
+		;;
+	*) error "Unknown argument: $(format_code "${1}")."; echo "$(usage)"; die ;;
 esac
-# Skip first argument now that it's processed.
+# Skip first argument now that it’s processed.
 shift 1
 
 for arg in "$@"; do
 	case $arg in
-		--force) FORCE=1 ;;
-		--help) help ;;
-		*) error "Unknown argument: $arg."; echo "$(usage)"; die ;;
+		*) error "Unknown argument: $(format_code "${arg}")."; echo "$(usage)"; die ;;
 	esac
 done
+
 
 # ===== MAIN LOGIC =====
 
@@ -105,28 +131,32 @@ NEW_VERSION=$(echo "${VERSION_COMPONENTS[*]}" | tr ' ' '.')
 
 # Pull remote.
 GIT_BRANCH="$(git branch --show-current)"
-echo "Pulling origin…"
-git pull origin "${GIT_BRANCH:?}"
+info "Pulling origin…"
+edo git pull origin "${GIT_BRANCH:?}"
 
 # Log some useful info.
-echo -e "Pod version: ${Yellow:?}${VERSION:?}${Color_Off:?} -> ${Green:?}${NEW_VERSION:?}${Color_Off:?}"
-echo "New commits:"
-git --no-pager log --reverse --no-merges \
-  --format="- %C(auto)%h %s %C(green)(%ad)%C(reset)" --date=short --color \
-  "${VERSION:?}"..HEAD
+info "Pod version: $(fg_yellow "${VERSION:?}") -> $(fg_green "${NEW_VERSION:?}")"
+if git rev-list --quiet "${VERSION:?}"..HEAD; then
+	die "No new commit since last version ($(format_code "${VERSION:?}")). This release is useless."
+else
+	info "New commits:"
+	git --no-pager log --reverse --no-merges \
+		--format="- %C(auto)%h %s %C(green)(%ad)%C(reset)" --date=short --color \
+		"${VERSION:?}"..HEAD
+fi
 
 # Update version number in files.
-echo "Changing version number in ${VERSION_FILE:?}…"
-echo "${NEW_VERSION:?}" > "${VERSION_FILE:?}"
+info "Changing version number in $(format_code "${VERSION_FILE:?}")…"
+edo echo "${NEW_VERSION:?}" \> "${VERSION_FILE:?}"
 
 # Create & push a new git tag.
 COMMIT_MESSAGE="$(commit_message)"
-echo "Committing changes…"
-git add "${VERSION_FILE:?}"
-git commit -m "${COMMIT_MESSAGE:?}"
-echo "Creating tag…"
-git tag "${NEW_VERSION:?}" -m "${COMMIT_MESSAGE:?}"
-echo "Pushing tag…"
-git push --atomic origin "${GIT_BRANCH:?}" "${NEW_VERSION:?}"
+info "Committing changes…"
+edo git add "${VERSION_FILE:?}"
+edo git commit -m "${COMMIT_MESSAGE:?}"
+info "Creating tag…"
+edo git tag "${NEW_VERSION:?}" -m "${COMMIT_MESSAGE:?}"
+info "Pushing tag…"
+edo git push --atomic origin "${GIT_BRANCH:?}" "${NEW_VERSION:?}"
 
-echo "Successfully created and pushed tag '${NEW_VERSION:?}'"
+success "Successfully created and pushed tag '${NEW_VERSION:?}'"
